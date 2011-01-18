@@ -40,20 +40,7 @@ Title::Title() {
 }
 
 Title::~Title() {
-/*
-	TTF_CloseFont(f_Title);
-	SDL_FreeSurface(s_Selector);
-	SDL_FreeSurface(s_NewButton);
-	SDL_FreeSurface(s_HScore);
-	SDL_FreeSurface(s_Options);
-	SDL_FreeSurface(s_QuitButton);
-	SDL_FreeSurface(s_Title);
-	*/
-	while(!projVec.empty()) {
-		projVec.back();
-		projVec.pop_back();
-	}
-	//delete &projVec;
+    projVec.clear();
 }
 
 void Title::Draw() {
@@ -69,12 +56,14 @@ void Title::Draw() {
 	player->Draw();
 	starfield->Draw();
 	if (!cometVec.empty()) {
-    	for (unsigned int i=0; i<cometVec.size(); ++i)
-    		cometVec[i]->Draw();
+        for (it = cometVec.begin(); it != cometVec.end(); ++it) {
+    		(*it)->Draw();
+        }
 	}
 	if (!projVec.empty()) {
-    	for (unsigned int i=0; i<projVec.size(); ++i)
-    		projVec[i]->Draw();
+        for (it = projVec.begin(); it != projVec.end(); ++it) {
+    		(*it)->Draw();
+        }
 	}
 	//face->draw(20, 20, "LOL TEST");
 }
@@ -142,30 +131,38 @@ void Title::Handle_Events() {
 }
 
 void Title::Logic() {
-	//std::vector<Collider*>::iterator it;
 	starfield->Logic();
 	if (player->GetAlive()) {
     	player->Logic();
 	} else {
 		delete player;
 	}
-	if (!projVec.empty()) {
-    	for (unsigned int i=0; i<projVec.size(); ++i)
-			if (projVec[i]->GetAlive()) {
-        		projVec[i]->Logic();
-			} else {
-				delete projVec[i];
-				//projVec.pop_back();
-			}
-	}
 	if (!cometVec.empty()) {
-    	for (unsigned int i=0; i<cometVec.size(); ++i) {
-        	if (!cometVec[i]->CheckCollision()) {
-        		cometVec[i]->Logic();
-        	} else {
-				delete cometVec[i];
-				//cometVec.pop_back();
-			}
-		}
+        for (it = cometVec.begin(); it != cometVec.end();) {
+            if ((*it)->GetAlive()) {
+        		(*it)->Logic();
+                ++it;
+    		} else {
+                delete *it;
+                it = cometVec.erase(it);
+                if (it != cometVec.end()) {
+                    ++it;
+                }
+            }
+        }
 	}
+	if (!projVec.empty()) {
+        for (it = projVec.begin(); it != projVec.end();) {
+            if ((*it)->GetAlive()) {
+        		(*it)->Logic();
+                ++it;
+			} else {
+                delete *it;
+                it = projVec.erase(it);
+                if (it != projVec.end()) {
+                    ++it;
+                }
+            }
+        }
+    }
 }

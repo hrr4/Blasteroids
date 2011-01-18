@@ -29,10 +29,6 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 
 Comet::~Comet() {
 	glDisableClientState(GL_VERTEX_ARRAY);
-	/*while(!vertVec.empty()) {
-		vertVec.back();
-		vertVec.pop_back();
-	}*/
 	vertVec.clear();
 	_collide->Detach(this);
 }
@@ -43,6 +39,8 @@ void Comet::Draw() {
 }
 
 void Comet::Logic() {
+    if (CheckCollision())
+        isAlive = false;
 	angle += speed*1.5;
 	//Velocity.x() *= 3.14159/180;
 	//Velocity.y() *= 3.14159/180;

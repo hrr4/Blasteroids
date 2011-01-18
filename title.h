@@ -29,7 +29,8 @@ private:
     Player* player;
     ICollide* iCollide;
     SDL_Color col_Grey, col_White;
-    std::vector<Collider*> projVec, cometVec;
+    std::vector<Collider*> projVec, cometVec; 
+	std::vector<Collider*>::iterator it;
 	//std::vector<boost::shared_ptr<Collider> > projVec, cometVec;
     //OGLFT::Monochrome* face;
 };
