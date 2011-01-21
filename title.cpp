@@ -1,12 +1,8 @@
 #include "title.h"
 
-Title::Title() {
-	iCollide = new ICollide();
-	player = new Player(iCollide, 400, 301, 25, 25);
-	starfield = new Starfield();
-	projVec.reserve(5);
-	cometVec.reserve(5);
-	//face = new OGLFT::Monochrome("04b_14.ttf", 14);
+Title::Title() : selectorX(230), selectorY(200) {
+    fe = new FontEngine("04b_11.ttf");    fe->AddFont("FreeSans.ttf");
+    starfield = new Starfield();
 
 	/*
     SDL_Color col_Grey = {175, 175, 175};
@@ -40,129 +36,62 @@ Title::Title() {
 }
 
 Title::~Title() {
-    projVec.clear();
+}
+
+void Title::DrawMenu() {
+glPushMatrix();    glColor4f(1,1,1,1);
+    //glScalef(1, -1, 1);
+
+    //TEST = fe->Draw("Blasteroids", 48, "04b_11", 50, 400);
+    fe->Draw("New Game", 12, "04b_11", 250, 200);
+    fe->Draw("High Scores", 12, "04b_11", 250, 180);
+    fe->Draw("Options", 12, "04b_11", 250, 160);
+    fe->Draw("Quit Game", 12, "04b_11", 250, 140);
+    fe->Draw(">                    <", 12, "04b_11", selectorX, selectorY);
+glPopMatrix();
 }
 
 void Title::Draw() {
-/*
-	Window::Fill(0, 0, 0);
-	Surface::Apply_Surface(r_NewButton.x, r_NewButton.y, s_NewButton, Window::Get_Surf());
-	Surface::Apply_Surface(r_HScore.x, r_HScore.y, s_HScore, Window::Get_Surf());
-	Surface::Apply_Surface(r_Options.x, r_Options.y, s_Options, Window::Get_Surf());
-	Surface::Apply_Surface(r_QuitButton.x, r_QuitButton.y, s_QuitButton, Window::Get_Surf());
-	Surface::Apply_Surface(r_Selector.x, r_Selector.y, s_Selector, Window::Get_Surf());
-	Surface::Apply_Surface(r_Title.x, r_Title.y, s_Title, Window::Get_Surf());
-	*/
-	player->Draw();
-	starfield->Draw();
-	if (!cometVec.empty()) {
-        for (it = cometVec.begin(); it != cometVec.end(); ++it) {
-    		(*it)->Draw();
-        }
-	}
-	if (!projVec.empty()) {
-        for (it = projVec.begin(); it != projVec.end(); ++it) {
-    		(*it)->Draw();
-        }
-	}
-	//face->draw(20, 20, "LOL TEST");
+    starfield->Draw();
+    DrawMenu();
 }
 
 void Title::Handle_Events() {
-	//int x, y = 0;
 	while(SDL_PollEvent(Event::Get_Event())) {
 		if (Event::Get_Event()->type == SDL_QUIT) {
 			Set_State(StateManager::Child_Quit);
-		} /*else if (Event::Get_Event()->type == SDL_MOUSEBUTTONDOWN) {
-           if (Event::Get_Event()->button.button == SDL_BUTTON_LEFT) {
-			   x = Event::Get_Event()->button.x;
-    			y = Event::Get_Event()->button.y;
-
-			if ((x > r_NewButton.x) && (x < (r_NewButton.x+r_NewButton.w)) && (y > r_NewButton.y) && (y < (r_NewButton.y+r_NewButton.h))) {
-				Set_State(StateManager::Child_Success);
-    		} else if ((x > r_QuitButton.x) && (x < (r_QuitButton.x+r_QuitButton.w)) && (y > r_QuitButton.y) && (y < (r_QuitButton.y+r_QuitButton.h))) {
-				Set_State(StateManager::Child_Quit);
-			}
-		   }
-		}*/ else if (Event::Get_Event()->type == SDL_KEYDOWN) {
+		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
 			switch (Event::Get_Event()->key.keysym.sym) {
                 case SDLK_ESCAPE : 
 						Set_State(StateManager::Child_Quit);
                         break;
-					case SDLK_UP :
-						if (r_Selector.y > r_NewButton.y) {
-							r_Selector.y -= 30;
-						} 
-						break;
-					case SDLK_DOWN :
-						if (r_Selector.y < r_NewButton.y+90) {
-							r_Selector.y += 30;
-						}
-						break;
-					case SDLK_RETURN :
-						// New Game
-						if (r_Selector.y == r_NewButton.y) {
-							Set_State(StateManager::Child_Success);
-						} else if (r_Selector.y == r_NewButton.y+30) {
-							// Write a High Score Function?
-						} else if (r_Selector.y == r_NewButton.y+60) {
-							// Write an Options Function?
-						} else if (r_Selector.y == r_NewButton.y+90) {
-							Set_State(StateManager::Child_Quit);
-						}
-						break;
-					case SDLK_SPACE:
-						if (player->CanShoot()) {
-							projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
-								player->GetPosition().x()+sinf(player->GetAngle()), 
-								player->GetPosition().y()+cosf(player->GetAngle()),
-								player->GetAngle()));
-							player->Shoot();
-						}
-            			break;
-					case SDLK_c:
-						cometVec.push_back(new Comet(iCollide, 300, 300, (rand() % 50+60), (rand() % 50+60), 
-							(rand() % 3 + 5), 5, player->GetPosition()));
-            			break;
+            	case SDLK_UP :
+            		if (selectorY > 200) {
+            			selectorY -= 30;
+            		}
+            		break;
+            	case SDLK_DOWN :
+            		if (selectorY > 200) {
+            			selectorY += 30;
+            		}
+            		break;
+            	case SDLK_RETURN :
+            		// New Game
+            		if (selectorY == r_NewButton.y) {
+            			Set_State(StateManager::Child_Success);
+            		} else if (r_Selector.y == r_NewButton.y+30) {
+            			// Write a High Score Function?
+            		} else if (r_Selector.y == r_NewButton.y+60) {
+            			// Write an Options Function?
+            		} else if (r_Selector.y == r_NewButton.y+90) {
+            			Set_State(StateManager::Child_Quit);
+            		}
+            		break;
            }
 		}
 	}
-	player->Handle_Events();
 }
 
 void Title::Logic() {
 	starfield->Logic();
-	if (player->GetAlive()) {
-    	player->Logic();
-	} else {
-		delete player;
-	}
-	if (!cometVec.empty()) {
-        for (it = cometVec.begin(); it != cometVec.end();) {
-            if ((*it)->GetAlive()) {
-        		(*it)->Logic();
-                ++it;
-    		} else {
-                delete *it;
-                it = cometVec.erase(it);
-                if (it != cometVec.end()) {
-                    ++it;
-                }
-            }
-        }
-	}
-	if (!projVec.empty()) {
-        for (it = projVec.begin(); it != projVec.end();) {
-            if ((*it)->GetAlive()) {
-        		(*it)->Logic();
-                ++it;
-			} else {
-                delete *it;
-                it = projVec.erase(it);
-                if (it != projVec.end()) {
-                    ++it;
-                }
-            }
-        }
-    }
 }

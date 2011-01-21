@@ -115,7 +115,6 @@ void Player::Logic() {
 
 void Player::Shoot() {
     if(canShoot) {
-		//projVec.push_back(new Projectile(Projectile::PROJ_BASIC, Position.x()+sinf(angle*DEGTORAD), Position.y()+cosf(angle*DEGTORAD), angle*DEGTORAD)); 
 		canShoot = false;
 	}
 }

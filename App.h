@@ -27,9 +27,9 @@ private:
 	void Set_GameScreen(StateManager::Global currentGlobal);
     Window* winmain;
 	IGameScreen* activeScreen;
-	StateManager StateManager;
+	StateManager manager;
 	FPS delta;
-	bool isRunning;
+	bool isRunning, levelNum;
 };
 
 #endif

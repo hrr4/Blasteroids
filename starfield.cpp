@@ -14,11 +14,7 @@ Starfield::Starfield() {
 }
 
 Starfield::~Starfield() {
-    while(!vertVec.empty()) {
-		vertVec.back();
-		vertVec.pop_back();
-	}
-	delete &vertVec;
+    vertVec.clear();
 }
 
 void Starfield::Draw() {

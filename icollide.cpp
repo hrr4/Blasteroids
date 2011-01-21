@@ -61,14 +61,11 @@ bool ICollide::TestRadii(Collider* c1, Collider* c2) {
     
     	// Finally, conduct tests
     	if (-TOUCH_DISTANCE < radii_squared - distance_squared && radii_squared - distance_squared < TOUCH_DISTANCE) {
-    		// Touching
-    		return true;
+    		return true; // Touching
     	} else if (radii_squared > distance_squared) {
-    		// Overlapping
-    		return true;
+    		return true; // Overlapping
     	} else {
-    		// Nothing
-    		return false;
+    		return false; // Nothing
     	}
 	} else {
 		return false;

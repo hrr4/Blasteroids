@@ -1,36 +1,32 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "comet.h"
-#include "convert.h"
-#include "player.h"
 #include "gamescreen.h"
-#include "Entity.h"
-#include <SDL_ttf.h>
+#include "player.h"
+#include "fontengine.h"
+#include "comet.h"
+#include "Projectile.h"
+#include "starfield.h"
+#include "icollide.h"
 #include <vector>
-#include <fstream>
-#include <sstream>
+#include <SDL_ttf.h>
 
 class Level : public IGameScreen {
 public:
-	Level(int levelNum);
-	~Level();
-	void Logic();
-	void Handle_Events();
-	void Draw();
-	bool Load_Level();
-protected:
-	static int lineOffset;
-	TTF_Font* f_HUD;
-	SDL_Rect r_Formation;
-	SDL_Surface* s_Background, *s_Score, *s_Lives;
-	Entity* player, *comet/*, *ships*/;
-	static const int ROWS=9, COLUMNS=6;
-	int tileType, curr_x, curr_y, totalAlive, currLevel;
-	std::vector<Entity*> enemyVec;	
-	std::ifstream fl_currLevel;
-	std::string line;
-	std::stringstream ss;
+    Level(int levelNum);
+    virtual ~Level();
+    virtual void Logic();
+    virtual void Draw();
+    virtual void Handle_Events();
+private:
+    FontEngine* fe;
+    Entity* starfield, *testProj;
+    ICollide* iCollide;
+    std::vector<Player*> playerVec;
+    std::vector<Collider*> projVec, cometVec; 
+	std::vector<Collider*>::iterator it;
+	std::vector<Player*>::iterator pIt;
+    int untilNext, kills;
 };
 
 #endif
