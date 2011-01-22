@@ -2,10 +2,10 @@
 
 //template <class T>
 
-
 Level::Level(int levelNum) : kills(0) {
 	iCollide = new ICollide();
 	starfield = new Starfield();
+    hud = new HUD(*fe, true, true, true);
 	projVec.reserve(5);
 	cometVec.reserve(5);
     playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));

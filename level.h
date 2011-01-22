@@ -8,8 +8,8 @@
 #include "Projectile.h"
 #include "starfield.h"
 #include "icollide.h"
+#include "hud.h"
 #include <vector>
-#include <SDL_ttf.h>
 
 class Level : public IGameScreen {
 public:
@@ -22,6 +22,7 @@ private:
     FontEngine* fe;
     Entity* starfield, *testProj;
     ICollide* iCollide;
+    HUD* hud;
     std::vector<Player*> playerVec;
     std::vector<Collider*> projVec, cometVec; 
 	std::vector<Collider*>::iterator it;

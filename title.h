@@ -12,8 +12,12 @@ public:
     virtual void Logic();
     virtual void Draw();
     virtual void Handle_Events();
-    void DrawMenu();
+    void DrawMain();
+    void DrawScores();
+    void DrawOptions();
 private:
+    enum Screen {Main, Scores, Options};
+    Screen activeScreen;
     FontEngine* fe;
     Entity* starfield;
     int selectorX, selectorY;
