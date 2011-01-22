@@ -4,7 +4,6 @@
 #include "gamescreen.h"
 #include "fontengine.h"
 #include "starfield.h"
-//#include <SDL_ttf.h>
 
 class Title : public IGameScreen {
 public:
@@ -15,7 +14,7 @@ public:
     virtual void Handle_Events();
     void DrawMenu();
 private:
-    FontEngine* fe, *TEST;
+    FontEngine* fe;
     Entity* starfield;
     int selectorX, selectorY;
 };

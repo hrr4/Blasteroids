@@ -1,7 +1,9 @@
 #include "statemanager.h"
 
 StateManager::StateManager() {
-	currentGlobal = Global_Intro;
+    // REMEMBER CHANGE THIS TOO TO START AT DIFFERENT PLACES IN GAEMZ0rZ!!
+	//currentGlobal = Global_Intro;
+	currentGlobal = Global_Title;
 	currentChild = Child_Null;	
 }
 

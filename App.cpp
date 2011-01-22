@@ -3,16 +3,15 @@
 App::App() {
 	srand(time(0));
     winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
-	activeScreen = new Level(0);
-	//delta.Start();
+	//activeScreen = new Level(0);
+	activeScreen = new Title();
+	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
-	TTF_Init();
 	initGL();
 }
 
 App::~App() {
-	delete winmain;
-	delete activeScreen;
+	delete winmain, activeScreen;
 }
 
 void App::Loop() {
@@ -47,7 +46,7 @@ void App::Set_GameScreen(StateManager::Global nextGlobal) {
 		levelNum = 0;
 		break;
 	case StateManager::Global_Level :
-		switch(activeScreen->Get_State()) {
+        switch(manager.Get_GlobalState()) {
 		case StateManager::Global_Title :
         	delete activeScreen;
     		activeScreen = new Level(levelNum);
@@ -56,7 +55,7 @@ void App::Set_GameScreen(StateManager::Global nextGlobal) {
         	delete activeScreen;
             activeScreen = new Level(++levelNum);
             break;
-		}
+		} 
 		/*if (currLevel == global::numLevels) {
             activeScreen = new Title();
 			//currLevel = 0;
@@ -80,8 +79,7 @@ bool App::initGL() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0, Window::Get_Surf()->w, Window::Get_Surf()->h, 0, -1, 1);
-	//glOrtho(0, Window::Get_Surf()->w, 0, Window::Get_Surf()->h, -1, 1);
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA/*GL_ONE*/);
 	glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);

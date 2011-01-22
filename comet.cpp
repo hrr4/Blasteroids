@@ -44,8 +44,8 @@ void Comet::Logic() {
 	angle += speed*1.5;
 	//Velocity.x() *= 3.14159/180;
 	//Velocity.y() *= 3.14159/180;
-	//Position.x() -= Direction.x()/*+Velocity.x()*/;
-	//Position.y() += Direction.x()/*+Velocity.x()*/;
+	Position.x() -= Direction.x()/*+Velocity.x()*/;
+	Position.y() -= Direction.y()/*+Velocity.x()*/;
 	/*Position.x() += speed * sinf(Velocity.x());
 	Position.y() -= speed * cosf(Velocity.y());*/
     /*centerx = Position.x()+r_Rect.w/2;
@@ -80,6 +80,7 @@ void Comet::Render(int r, int g, int b, int a) {
 glPushMatrix();
 	glTranslatef(Position.x(), Position.y(), Position.z());
 	glRotatef(angle, 0, 0, 1);
+	//glTranslatef(-Position.x(), -Position.y(), -Position.z());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vertVec[0]);
     glColor4f(r, g, b, a);
