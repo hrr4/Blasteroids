@@ -6,6 +6,7 @@
 #include <FTGL\ftgl.h>
 #include <string>
 #include <map>
+#include <memory>
 
 class FontEngine {
 public:
@@ -20,8 +21,11 @@ public:
    
 private:
     FTPoint point;
+    //std::shared_ptr<FTFont> Font;
     FTFont* Font;
     std::string currentFont;
+    /*std::map<std::string, std::shared_ptr<FTFont> > fontMap;
+    std::map<std::string, std::shared_ptr<FTFont> >::const_iterator fIt;*/
     std::map<std::string, FTFont*> fontMap;
     std::map<std::string, FTFont*>::const_iterator fIt;
 };

@@ -1,35 +1,30 @@
 #include "title.h"
 
-Title::Title() : selectorX(Window::Get_Surf()->w-105), selectorY(-(Window::Get_Surf()->h-45)) {
-    fe = new FontEngine("04b_11.ttf");    fe->AddFont("FreeSans.ttf");
+Title::Title() : selectorX(Window::Get_Surf()->w-105), selectorY(Window::Get_Surf()->h-45) {
     starfield = new Starfield();
-    activeScreen = Main;
+    active = Main;
 }
 
-Title::~Title() {}
+Title::~Title() {
+    delete starfield;
+}
 
 void Title::DrawMain() {
-glPushMatrix();    glColor4f(1,1,1,.8);
-    glScalef(1, -1, 1);
-
     //TEST = fe->Draw("Blasteroids", 48, "04b_11", 50, 400);
-    fe->Draw("Blasteroids", 52, "04b_11", 30, -80);
+    glColor4f(1,1,1,.8);
+    fe->Draw("Blasteroids", 52, "04b_11", 30, 80);
     glColor4f(1,1,1,.5);
-    fe->Draw("Engage!", 12, "04b_11", Window::Get_Surf()->w-90, -(Window::Get_Surf()->h-45));
-    fe->Draw("Scores", 12, "04b_11", Window::Get_Surf()->w-85, -(Window::Get_Surf()->h-30));
-    fe->Draw("Options", 12, "04b_11", Window::Get_Surf()->w-90, -(Window::Get_Surf()->h-15));
-    fe->Draw("Quit", 12, "04b_11", Window::Get_Surf()->w-45, -(Window::Get_Surf()->h));
+    fe->Draw("Engage!", 12, "04b_11", Window::Get_Surf()->w-90, Window::Get_Surf()->h-45);
+    fe->Draw("Scores", 12, "04b_11", Window::Get_Surf()->w-85, Window::Get_Surf()->h-30);
+    fe->Draw("Options", 12, "04b_11", Window::Get_Surf()->w-90, Window::Get_Surf()->h-15);
+    fe->Draw("Quit", 12, "04b_11", Window::Get_Surf()->w-45, Window::Get_Surf()->h);
     glColor4f(1,1,1,.9);
     fe->Draw(">", 12, "04b_11", selectorX, selectorY);
-glPopMatrix();
 }
 
 void Title::DrawScores() {
-glPushMatrix();    glColor4f(1,1,1,.8);
-    glScalef(1, -1, 1);
-
-    //TEST = fe->Draw("Blasteroids", 48, "04b_11", 50, 400);
-    fe->Draw("Blasteroids", 52, "04b_11", 30, -80);
+    glColor4f(1,1,1,.8);
+    fe->Draw("Blasteroids", 52, "04b_11", 30, 80);
     glColor4f(1,1,1,.5);
    /* fe->Draw("Engage!", 12, "04b_11", Window::Get_Surf()->w-90, -(Window::Get_Surf()->h-45));
     fe->Draw("Scores", 12, "04b_11", Window::Get_Surf()->w-85, -(Window::Get_Surf()->h-30));
@@ -37,27 +32,22 @@ glPushMatrix();    glColor4f(1,1,1,.8);
     fe->Draw("Back", 12, "04b_11", Window::Get_Surf()->w-45, -(Window::Get_Surf()->h));*/
     glColor4f(1,1,1,.9);
     fe->Draw(">", 12, "04b_11", selectorX, selectorY);
-glPopMatrix();
 }
 
 void Title::DrawOptions() {
-glPushMatrix();    glColor4f(1,1,1,.8);
-    glScalef(1, -1, 1);
-
-    //TEST = fe->Draw("Blasteroids", 48, "04b_11", 50, 400);
+    glColor4f(1,1,1,.8);
     fe->Draw("Blasteroids", 52, "04b_11", 30, -80);
     glColor4f(1,1,1,.5);
-    fe->Draw("Fullscreen / Windowed", 12, "04b_11", Window::Get_Surf()->w-265, -(Window::Get_Surf()->h-45));
+    fe->Draw("Fullscreen / Windowed", 12, "04b_11", Window::Get_Surf()->w-265, Window::Get_Surf()->h-45);
     /*fe->Draw("Scores", 12, "04b_11", Window::Get_Surf()->w-85, -(Window::Get_Surf()->h-30));
     fe->Draw("Options", 12, "04b_11", Window::Get_Surf()->w-90, -(Window::Get_Surf()->h-15));*/
-    fe->Draw("Back", 12, "04b_11", Window::Get_Surf()->w-45, -(Window::Get_Surf()->h));
+    fe->Draw("Back", 12, "04b_11", Window::Get_Surf()->w-45, Window::Get_Surf()->h);
     glColor4f(1,1,1,.9);
     fe->Draw(">", 12, "04b_11", selectorX, selectorY);
-glPopMatrix();
 }
 void Title::Draw() {
     starfield->Draw();
-    switch (activeScreen) {
+    switch (active) {
         case Main:
             DrawMain();
             break;
@@ -80,26 +70,26 @@ void Title::Handle_Events() {
             		Set_State(StateManager::Child_Quit);
                     break;
             	case SDLK_UP :
-            		if (selectorY < -(Window::Get_Surf()->h-45)) {
-            			selectorY += 15;
+            		if (selectorY > Window::Get_Surf()->h-45) {
+            			selectorY -= 15;
             		}
             		break;
             	case SDLK_DOWN :
-            		if (selectorY > -(Window::Get_Surf()->h)) {
-            			selectorY -= 15;
+            		if (selectorY < Window::Get_Surf()->h) {
+            			selectorY += 15;
             		}
             		break;
             	case SDLK_RETURN :
             		// New Game
-            		if (selectorY == -(Window::Get_Surf()->h-45)) {
+            		if (selectorY == Window::Get_Surf()->h-45) {
             			Set_State(StateManager::Child_Success);
-            		} else if (selectorY == -(Window::Get_Surf()->h-30)) {
+            		} else if (selectorY == Window::Get_Surf()->h-30) {
             			// Write a High Score Function?
-                        activeScreen = Scores;
-            		} else if (selectorY == -(Window::Get_Surf()->h-15)) {
+                        active = Scores;
+            		} else if (selectorY == Window::Get_Surf()->h-15) {
             			// Write an Options Function?
-                        activeScreen = Options;
-            		} else if (selectorY == -(Window::Get_Surf()->h)) {
+                        active = Options;
+            		} else if (selectorY == Window::Get_Surf()->h) {
             			Set_State(StateManager::Child_Quit);
             		}
             		break;

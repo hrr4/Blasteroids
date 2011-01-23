@@ -1,11 +1,9 @@
 #include "level.h"
 
-//template <class T>
-
-Level::Level(int levelNum) : kills(0) {
+Level::Level(int levelNum) : kills(0), score(0) {
 	iCollide = new ICollide();
 	starfield = new Starfield();
-    hud = new HUD(*fe, true, true, true);
+    hud = new HUD(fe, true, true, true);
 	projVec.reserve(5);
 	cometVec.reserve(5);
     playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));
@@ -15,6 +13,9 @@ Level::Level(int levelNum) : kills(0) {
 
 Level::~Level() {
     projVec.clear();
+    delete iCollide;
+    delete starfield;
+    delete hud;
 }
 
 void Level::Draw() {	if (!playerVec.empty()) {
@@ -33,6 +34,7 @@ void Level::Draw() {	if (!playerVec.empty()) {
     		(*it)->Draw();
         }
 	}
+    hud->Score(score);
 }
 
 void Level::Handle_Events() {
@@ -97,11 +99,12 @@ void Level::Logic() {	starfield->Logic();
                 ++it;
     		} else {
                 delete *it;
-                it = cometVec.erase(it);
+                ++kills;
+                ++score;
+               it = cometVec.erase(it);
                 if (it != cometVec.end()) {
                     ++it;
                 }
-                ++kills;
             }
         }
 	}

@@ -4,7 +4,9 @@ int Player::numLives = 3;
 
 float Player::vertArray[9] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
 
-Player::Player(ICollide* c, int _x, int _y, int w, int h) {
+Player::Player(ICollide* c, int _x, int _y, int w, int h) :
+    up_pressed(false), burnout(false), /*isPassable(false), isAlive(true), canShoot(true),
+    radius(10), a(1), layer(1),*/ ticksOffset(400), mass(50) {
 	up_pressed = burnout = isPassable = false, isAlive = canShoot = true;
 	Position.x() = _x, Position.y() = _y, r_Rect.w = w, r_Rect.h = h;
 	radius = 10;

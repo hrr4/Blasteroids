@@ -4,6 +4,8 @@
 #include "gamescreen.h"
 #include "fontengine.h"
 #include "starfield.h"
+#include "hud.h"
+#include "Utility.h"
 
 class Title : public IGameScreen {
 public:
@@ -12,13 +14,13 @@ public:
     virtual void Logic();
     virtual void Draw();
     virtual void Handle_Events();
+private:
     void DrawMain();
     void DrawScores();
     void DrawOptions();
 private:
     enum Screen {Main, Scores, Options};
-    Screen activeScreen;
-    FontEngine* fe;
+    Screen active;
     Entity* starfield;
     int selectorX, selectorY;
 };

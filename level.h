@@ -3,7 +3,6 @@
 
 #include "gamescreen.h"
 #include "player.h"
-#include "fontengine.h"
 #include "comet.h"
 #include "Projectile.h"
 #include "starfield.h"
@@ -19,15 +18,14 @@ public:
     virtual void Draw();
     virtual void Handle_Events();
 private:
-    FontEngine* fe;
-    Entity* starfield, *testProj;
+    Entity* starfield;
     ICollide* iCollide;
     HUD* hud;
     std::vector<Player*> playerVec;
     std::vector<Collider*> projVec, cometVec; 
 	std::vector<Collider*>::iterator it;
 	std::vector<Player*>::iterator pIt;
-    int untilNext, kills;
+    int untilNext, kills, score;
 };
 
 #endif

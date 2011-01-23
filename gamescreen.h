@@ -7,6 +7,8 @@
 #include <random>
 #include <time.h>
 #include "statemanager.h"
+#include "fontengine.h"
+#include <memory>
 
 class IGameScreen {
 public:
@@ -18,6 +20,10 @@ public:
 	virtual void Draw()=0;
 
 protected:
+    FontEngine* fe;
+    //boost::shared_ptr<FontEngine> fe;
+    //std::shared_ptr<FontEngine> fe;
+    //FontEngine* fe_p;
 	void Set_State(StateManager::Child tempChild);
 	StateManager::Child currentChild;
 };

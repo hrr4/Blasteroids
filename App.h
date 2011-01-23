@@ -29,6 +29,7 @@ private:
 	StateManager manager;
 	FPS delta;
 	bool isRunning, levelNum;
+    unsigned long int next_tick;
 };
 
 #endif
