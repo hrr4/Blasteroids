@@ -5,15 +5,12 @@ int Player::numLives = 3;
 float Player::vertArray[9] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
 
 Player::Player(ICollide* c, int _x, int _y, int w, int h) :
-    up_pressed(false), burnout(false), /*isPassable(false), isAlive(true), canShoot(true),
-    radius(10), a(1), layer(1),*/ ticksOffset(400), mass(50) {
-	up_pressed = burnout = isPassable = false, isAlive = canShoot = true;
+    up_pressed(false), burnout(false), canShoot(true), a(1), ticksOffset(400), mass(50) {
+	isPassable = false, isAlive = true;
 	Position.x() = _x, Position.y() = _y, r_Rect.w = w, r_Rect.h = h;
 	radius = 10;
-	a = 1;
 	layer = 1;
 
-	ticksOffset = 400;
 	shootTimeout = SDL_GetTicks()+ticksOffset;
 
 	centerx = r_Rect.w/2+Position.x();
@@ -142,3 +139,5 @@ void Player::Update(Subject* ChangedSubject) {
 		_collide = static_cast<ICollide*>(ChangedSubject);
 	}
 }
+
+float Player::GetThrust() const { return thrust; }

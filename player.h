@@ -18,6 +18,7 @@ public:
 	static int numLives;
 	virtual void Update(Subject*);
 	void Shoot();
+    float GetThrust() const;
 private:
 	void Render();
 	float a, thrust, Heading, Rotation, Force; 

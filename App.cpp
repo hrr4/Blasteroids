@@ -6,7 +6,8 @@ App::App() {
 	activeScreen = new Title();
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
-	initGL();}
+	if (!initGL()) {        throw std::exception("OMG!");
+    }}
 
 App::~App() {
 	delete winmain, activeScreen;

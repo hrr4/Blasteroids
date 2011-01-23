@@ -13,6 +13,8 @@ Level::Level(int levelNum) : kills(0), score(0) {
 
 Level::~Level() {
     projVec.clear();
+    playerVec.clear();
+    cometVec.clear();
     delete iCollide;
     delete starfield;
     delete hud;
@@ -21,6 +23,8 @@ Level::~Level() {
 void Level::Draw() {	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
         	(*pIt)->Draw();
+            hud->Thrust((*pIt)->GetPosition().x(), (*pIt)->GetPosition().y()-25,
+                (*pIt)->GetThrust(), 1);
         }
     }
 	starfield->Draw();
@@ -67,6 +71,8 @@ void Level::Handle_Events() {
                             }
                         }
             			break;
+                case SDLK_m:
+                    hud->Announcement("TESTZ0RZ!", Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, 10, 60);
            }
 		}
 	}
@@ -125,7 +131,7 @@ void Level::Logic() {	starfield->Logic();
 
     // Switch Level Logic
     if (kills == untilNext) {
-        //Set_State(StateManager::Child_Success);
+        Set_State(StateManager::Child_Success);
     }
 
 }
