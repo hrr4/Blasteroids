@@ -132,12 +132,11 @@ void Player::Handle_Events() {
 	}
 }
 
-bool Player::CanShoot() const {return canShoot;}
-
 void Player::Update(Subject* ChangedSubject) {
 	if (ChangedSubject != _collide) {
 		_collide = static_cast<ICollide*>(ChangedSubject);
 	}
 }
+bool Player::CanShoot() const {return canShoot;}
 
 float Player::GetThrust() const { return thrust; }

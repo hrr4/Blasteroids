@@ -7,28 +7,32 @@ float HUD::thrustMeter[12] = {
 
 //HUD::HUD(std::shared_ptr<FontEngine> _fe, bool _thrust, bool _score, bool _amount)  :
 HUD::HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount)  :
-      thrust(_thrust), score(_score), amount(_amount), fe(_fe) {}
+      thrust(_thrust), score(_score), amount(_amount), fe(_fe), pMeter(thrustMeter),
+      j(0), maxHit(false) {}
 
-HUD::~HUD() {}
-
-void HUD::Score(int& _s) {
-    glColor4f(1, 1, 1, .4);
-    fe->Draw(itos(_s).c_str(), 12, "04b_11", 0, 10);
+HUD::~HUD() {
+    pMeter = 0;
+    delete pMeter;
 }
 
-void HUD::Thrust(float _x, float _y, float _t, float scale) {
-    float* test = thrustMeter;
-    //if (_t != 0) {
-    if (_t > 0) {
-        test[0] = test[9] -= _t*.1;
-    } else {
-        test[0] = test[9] = 10;
-    }
+void HUD::Score(const int& _s, const float _x, const float _y) {
 glPushMatrix();
+    glColor4f(1, 1, 1, .4);
+    fe->Draw(itos(_s).c_str(), 12, "04b_11", _x, _y);
+glPopMatrix();
+}
+
+void HUD::Thrust(const float _x, const float _y, const float _t, const float scale) {
+glPushMatrix();
+    if (_t > .1 && _t < 5) {
+        pMeter[0] = pMeter[9] -= _t*.1;
+    } else {
+        pMeter[0] = pMeter[9] = 10;
+    }
 	glEnableClientState(GL_VERTEX_ARRAY);
     glTranslatef(_x, _y, 0);
     for (float i = 0; i <= _t; i+=0.01) {
-        glColor4f(.1, .1, .1, i);
+        glColor4f(.2, .2, .2, i);
     }
     glScalef(scale, scale, 0);
 	glVertexPointer(3, GL_FLOAT, 0, &thrustMeter);
@@ -37,19 +41,26 @@ glPushMatrix();
 glPopMatrix();
 }
 
-void HUD::Announcement(std::string _m, float _x, float _y, int _isize, int _fsize) {
+void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, int& _isize) {
+    box = fe->GetBBox(_m.c_str(), _f.c_str());
+    GetBBoxMiddle(box);
+
 glPushMatrix();
-    // Lets try to avoid a copy in the for loop
-    for (float i = 0; i < 100; ++i) {
-        //i *= .01;
-        glColor4f(.8, .8, .8, i);
-        // INFINITE LOOP NIGHT NIGHT
-        for (int i = _isize; i < _fsize; ++i) {
-            fe->Draw(_m.c_str(), i, "04b_11", _x, _y);
+    if (_isize > 0) {
+        if (j >= 1) {
+            glColor4f(.8, .8, .8, j);
+            j-=0.1;
         }
+        fe->Draw(_m.c_str(), _isize, "04b_11", _x, _y);
+        _isize-=2;
     }
-    /*for (int i = _isize; i < _fsize; ++i) {
-        fe->Draw(_m.c_str(), i, "04b_11", _x, _y);
-    }*/
 glPopMatrix();
 };
+
+void HUD::GetBBoxMiddle(const FTBBox& _b) {
+    FTGL_DOUBLE test = _b.Upper().Xf();
+    FTGL_DOUBLE test2 = _b.Upper().Yf();
+    aX = (_b.Upper().Xf()/2);
+    //aY = (_b.Upper().Xf()/2);
+    //aY = (y1+y2)/2);
+}

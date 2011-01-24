@@ -5,7 +5,7 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 	r = _r, g = _g, b = _b, a = _a, n = _n;
 	Position.z() = angle = 0;
 	speed = Utility::UGen_Random(0.1, 1.0);
-	radius = 5;
+	radius = (_h/2) + ((_w*_w)/(8*_h));
     centerx = Position.x()+r_Rect.w/2;
 	centery = Position.y()+r_Rect.h/2;
 
@@ -21,7 +21,7 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 	isAlive = true;
 	isPassable = false;
 
-    Randomize_Points(Position.x(), Position.y(), _w, _h, _n);
+    Randomize_Points(_w, _h, _n);
     _collide = c;
 	_collide->Attach(this);
 
@@ -42,53 +42,43 @@ void Comet::Logic() {
     if (CheckCollision())
         isAlive = false;
 	angle += speed*1.5;
-	//Velocity.x() *= 3.14159/180;
-	//Velocity.y() *= 3.14159/180;
-	Position.x() -= Direction.x()/*+Velocity.x()*/;
-	Position.y() -= Direction.y()/*+Velocity.x()*/;
-	/*Position.x() += speed * sinf(Velocity.x());
-	Position.y() -= speed * cosf(Velocity.y());*/
-    /*centerx = Position.x()+r_Rect.w/2;
-	centery = Position.y()+r_Rect.h/2;*/
+	Position.x() -= Direction.x()+Velocity.x();
+	Position.y() -= Direction.y()+Velocity.y();
 }
 
-void Comet::Randomize_Points(float x, float y, int w, int h, int n) {
+void Comet::Randomize_Points(int w, int h, int n) {
 	int halfnum = n/2;
-	GLfloat lastx = 0, lasty = 0;
+	GLfloat lastx = -(rand() % w/3), lasty = -(rand() % h/2);
 
 	// Top half
 	for (unsigned int i=0; i<halfnum*3; i+=3) {
-		lastx += (rand() % 1 + 10), lasty += (rand() % h/2);
 		vertVec.push_back(lastx);
 		vertVec.push_back(lasty);
 		vertVec.push_back(Position.z());
+		lastx += (rand() % w), lasty = -(rand() % h/2);
 	}
 
 	// Set to start on opposite side
-	lastx = w, lasty += h/2;
+	lastx = (rand() % w), lasty += h/2;
 
 	// Bottom half
 	for (unsigned int i=halfnum*3; i<n*3; i+=3) {
-		lastx -= (rand() % 1 + 20), lasty = (rand() % h + h/2);
 		vertVec.push_back(lastx);
 		vertVec.push_back(lasty);
 		vertVec.push_back(Position.z());
+		lastx -= (rand() % w), lasty = (rand() % h/2);
 	}
 }
 
 void Comet::Render(int r, int g, int b, int a) {
 glPushMatrix();
-	glTranslatef(Position.x(), Position.y(), Position.z());
+	//glTranslatef(Position.x(), Position.y(), Position.z());
+	glTranslatef(Position.x()+(r_Rect.w/2), Position.y()-(r_Rect.h/2), Position.z());
 	glRotatef(angle, 0, 0, 1);
-	//glTranslatef(-Position.x(), -Position.y(), -Position.z());
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vertVec[0]);
     glColor4f(r, g, b, a);
-	//glDrawArrays(GL_LINE_LOOP, 0, n);
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(-5, -5, 0); glVertex3f(0, -3, 0); glVertex3f(5, -4, 0);
-		glVertex3f(5, 5, 0); glVertex3f(0, 3, 0); glVertex3f(5, 4, 0);
-	glEnd();
+	glDrawArrays(GL_LINE_LOOP, 0, n);
 	glFlush();
 glPopMatrix();
 }

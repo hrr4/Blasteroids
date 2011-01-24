@@ -12,7 +12,7 @@
 
 class Level : public IGameScreen {
 public:
-    Level(int levelNum);
+    Level(int _levelNum);
     virtual ~Level();
     virtual void Logic();
     virtual void Draw();
@@ -25,7 +25,8 @@ private:
     std::vector<Collider*> projVec, cometVec; 
 	std::vector<Collider*>::iterator it;
 	std::vector<Player*>::iterator pIt;
-    int untilNext, kills, score;
+    int untilNext, kills, score, announceSize, levelNum;
+    bool callAnnouncement;
 };
 
 #endif

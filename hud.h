@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "fontengine.h"
-#include <memory>
 #include <string>
 #include "convert.h"
 
@@ -21,19 +20,22 @@
 
 class HUD {
 public:
-    //HUD(std::shared_ptr<FontEngine> _fe, bool _thrust, bool _score, bool _amount);
     HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount);
     ~HUD();
-    void Thrust(float _x, float _y, float _t, float scale);
-    void Score(int& _s);
+    void Thrust(const float _x, const float _y, const float _t, const float scale);
+    void Score(const int& _s, const float _x, const float _y);
     void Amount(int& _a);
-    void Announcement(std::string _m, float _x, float _y, int _isize, int _fsize);
+    void Announcement(const std::string _m, const std::string _f, float _x, float _y, int& _isize);
 
 private:
-    //std::shared_ptr<FontEngine> fe;
+    void GetBBoxMiddle(const FTBBox& _x);
+private:
     FontEngine* fe;
-    bool thrust, score, amount;
+    FTBBox box;
+    bool thrust, score, amount, maxHit;
     static float thrustMeter[12];
+    float* pMeter;
+    float aX, aY, j;
 };
 
 #endif

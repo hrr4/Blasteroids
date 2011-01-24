@@ -14,45 +14,39 @@ void FontEngine::AddFont(const std::string& filename) {
     fontMap.insert(std::make_pair(text, new FTTextureFont(filename.c_str())));
 }
 
-// Gotta make into some sort of object thing or something i dunno
-// Gotta be able to manipulate this shit
-/*FontEngine**/void FontEngine::Draw(const std::string& text, int size, const std::string& ident, float X, float Y, float Z) {
-glPushMatrix();//    glColor4f(1,1,1,.8);
-    glScalef(1, -1, 1);
+void FontEngine::RemoveFont(const std::string& filename) {
+    fontMap.erase(filename.c_str());
+}
+
+void FontEngine::Draw(const std::string& text, int size, const std::string& ident, float X, float Y, float Z) {
+glPushMatrix();    glScalef(1, -1, 1);
 
     point.X(X);
     point.Y(-Y);
     if (Z != 0) 
         point.Z(Z);
-    //if (currentFont != ident) {
-        for (fIt = fontMap.begin(); fIt != fontMap.end(); ++fIt) {
-            if (fIt->first == ident) {
-                (*fIt).second->FaceSize(size);
-                (*fIt).second->Render(text.c_str(),text.size(), point);
-                currentFont = (*fIt).first;
-                //return *fIt;
-            }
+    for (fIt = fontMap.begin(); fIt != fontMap.end(); ++fIt) {
+        if (fIt->first == ident) {
+            (*fIt).second->FaceSize(size);
+            (*fIt).second->Render(text.c_str(),text.size(), point);
         }
+    }
 glPopMatrix();
-    /*} else {
-        (*fIt).second->FaceSize(size);
-        (*fIt).second->Render(text.c_str(),text.size(), point);
-    }*/
-}
-/*
-void FontEngine::Move(float X, float Y, float Z) {
-    point.X(X);
-    point.Y(Y);
-}
-*/
-
-void FontEngine::SetFace(int size) {
-    Font->FaceSize(size);
 }
 
-/*
-void FontEngine::SetFont(const std::string filename, unsigned int size) {
-    Font = new FTBitmapFont(filename.c_str());
-    Font->FaceSize(size);
+FTBBox FontEngine::GetBBox(const std::string& _text, const std::string& _filename) {
+    std::string filename;
+    /*if (_filename.find_first_of(".")) {
+        filename = filename.substr(0, _filename.find_last_of("."));
+    } else {*/
+        filename = _filename;
+    //}
+        // PROBLEM WITH BBOX
+        // NEED TO INPUT SIZE OR POSITION OR SOMETHING.... WILL FIND MORE LATAR
+    for (fIt = fontMap.begin(); fIt != fontMap.end(); ++fIt) {
+        if (fIt->first == filename) {
+            return (*fIt).second->BBox(_text.c_str());
+        }
+    }
+    return false;
 }
-*/

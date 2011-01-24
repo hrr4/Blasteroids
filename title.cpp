@@ -84,10 +84,8 @@ void Title::Handle_Events() {
             		if (selectorY == Window::Get_Surf()->h-45) {
             			Set_State(StateManager::Child_Success);
             		} else if (selectorY == Window::Get_Surf()->h-30) {
-            			// Write a High Score Function?
                         active = Scores;
             		} else if (selectorY == Window::Get_Surf()->h-15) {
-            			// Write an Options Function?
                         active = Options;
             		} else if (selectorY == Window::Get_Surf()->h) {
             			Set_State(StateManager::Child_Quit);

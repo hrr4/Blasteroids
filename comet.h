@@ -20,7 +20,7 @@ public:
     virtual void Update(Subject*);
 
 private:
-	void Randomize_Points(float x, float y, int w, int h, int n);
+	void Randomize_Points(int w, int h, int n);
 	void Render(int r, int g, int b, int a);
     float r, g, b, a;
 	float n, centerx, centery;

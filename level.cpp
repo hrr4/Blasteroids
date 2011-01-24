@@ -1,6 +1,7 @@
 #include "level.h"
 
-Level::Level(int levelNum) : kills(0), score(0) {
+Level::Level(int _levelNum) : kills(0), score(0), callAnnouncement(false),
+    announceSize(60), levelNum(_levelNum) {
 	iCollide = new ICollide();
 	starfield = new Starfield();
     hud = new HUD(fe, true, true, true);
@@ -38,7 +39,11 @@ void Level::Draw() {	if (!playerVec.empty()) {
     		(*it)->Draw();
         }
 	}
-    hud->Score(score);
+    hud->Score(score, 0, 10);
+    if (callAnnouncement) {
+        hud->Announcement("TESTZ0RZ!", "04b_11", 
+            Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
+    }
 }
 
 void Level::Handle_Events() {
@@ -72,7 +77,21 @@ void Level::Handle_Events() {
                         }
             			break;
                 case SDLK_m:
-                    hud->Announcement("TESTZ0RZ!", Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, 10, 60);
+                    callAnnouncement = true;
+                    break;
+                case SDLK_s:
+                	if (!playerVec.empty()) {
+                        playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));
+                    }
+                    break;
+                /*case SDLK_t:
+                    	if (!playerVec.empty()) {
+                            for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
+        						cometVec.push_back(new Comet(iCollide, 300, 300, (rand() % 50+60), (rand() % 50+60), 
+                                    (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
+                            }
+                        }
+            			break;*/
            }
 		}
 	}
@@ -130,8 +149,8 @@ void Level::Logic() {	starfield->Logic();
     }
 
     // Switch Level Logic
-    if (kills == untilNext) {
+    /*if (kills == untilNext) {
         Set_State(StateManager::Child_Success);
-    }
+    }*/
 
 }
