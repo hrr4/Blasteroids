@@ -6,15 +6,10 @@ Starfield::Starfield() {
 
 	r_Rect.w = Window::Get_Surf()->w;
 	r_Rect.h = Window::Get_Surf()->h;
-
-	/*xVec = rand() %  2;
-	yVec = rand() %  2;*/
-
-	RandomizePoints(r_Rect.x, r_Rect.y, r_Rect.w, r_Rect.h, points*3);
 }
 
 Starfield::~Starfield() {
-    vertVec.clear();
+    starVec.clear();
 }
 
 void Starfield::Draw() {
@@ -44,24 +39,15 @@ void Starfield::Logic() {
 	}
 }
 
-void Starfield::RandomizePoints(Sint16& x, Sint16& y, Uint16& w, Uint16& h, int n) {
-	for (unsigned int i=0; i < n; i+=3) {
-		vertVec.push_back(static_cast<float>(rand() % w));
-		vertVec.push_back(static_cast<float>(rand() % h));
-		vertVec.push_back(Position.z());
-	}
-}
-
 void Starfield::Render() {
 glPushMatrix();
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(3, GL_FLOAT, 0, &vertVec[0]);
+	glVertexPointer(3, GL_FLOAT, 0, &starVec[0]);
     glColor4f(1, 1, 1, a);
 	glDrawArrays(GL_POINTS, 0, points);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glFlush();
 glPopMatrix();
 }
-
 
 void Starfield::Handle_Events() {}

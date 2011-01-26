@@ -25,7 +25,7 @@ public:
 	int GetLayer() const;
 protected:
 	SDL_Rect r_Rect, r_Clip;
-	float angle, speed, radius; 
+	float angle, speed, radius, a; 
 	bool isAlive, isPassable;
 	Vectorf Position, Velocity, Acceleration, Direction;
 	int layer;

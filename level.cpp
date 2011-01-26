@@ -70,7 +70,8 @@ void Level::Handle_Events() {
             	case SDLK_c:
                     	if (!playerVec.empty()) {
                             for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        						cometVec.push_back(new Comet(iCollide, 300, 300, (rand() % 50+60), (rand() % 50+60), 
+        						cometVec.push_back(new Comet(iCollide, 300.0f, 300.0f, 
+                                    static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
                                     (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
                             }
                         }
@@ -86,7 +87,8 @@ void Level::Handle_Events() {
                 case SDLK_t:
                 	if (!playerVec.empty()) {
                         for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-                            cometVec.push_back(new Comet(iCollide, -20, -10, (rand() % 50+60), (rand() % 50+60), 
+                            cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
+                                static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
                                 (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
                         }
                     }

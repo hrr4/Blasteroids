@@ -1,6 +1,6 @@
 #include "comet.h"
 
-Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float vel, Vectorf& _vec, int _r, int _g, int _b, int _a) :
+Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float vel, Vectorf _vec, int _r, int _g, int _b, int _a) :
         inBounds(false) {
 	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
 	r = _r, g = _g, b = _b, a = _a, n = _n;
