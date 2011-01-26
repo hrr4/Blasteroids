@@ -5,6 +5,11 @@ Title::Title() : selectorX(Window::Get_Surf()->w-105), selectorY(Window::Get_Sur
     active = Main;
 }
 
+Title::Title(Screen forceScreen) : selectorX(Window::Get_Surf()->w-105), selectorY(Window::Get_Surf()->h-45) {
+    starfield = new Starfield();
+    active = forceScreen;
+}
+
 Title::~Title() {
     delete starfield;
 }
@@ -80,7 +85,6 @@ void Title::Handle_Events() {
             		}
             		break;
             	case SDLK_RETURN :
-            		// New Game
             		if (selectorY == Window::Get_Surf()->h-45) {
             			Set_State(StateManager::Child_Success);
             		} else if (selectorY == Window::Get_Surf()->h-30) {

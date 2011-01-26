@@ -1,6 +1,7 @@
 #include "comet.h"
 
-Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float vel, Vectorf& _vec, int _r, int _g, int _b, int _a) {
+Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float vel, Vectorf& _vec, int _r, int _g, int _b, int _a) :
+        inBounds(false) {
 	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
 	r = _r, g = _g, b = _b, a = _a, n = _n;
 	Position.z() = angle = 0;
@@ -44,6 +45,18 @@ void Comet::Logic() {
 	angle += speed*1.5;
 	Position.x() -= Direction.x()+Velocity.x();
 	Position.y() -= Direction.y()+Velocity.y();
+
+    if (inBounds) {
+    	if (Position.x() < 0) {
+    		Position.x() = Window::Get_Surf()->w;
+    	} else if (Position.y() < 0) {
+    		Position.y() = Window::Get_Surf()->h;
+    	} else if (Position.x() > Window::Get_Surf()->w) {
+    		Position.x() = 0;
+    	} else if (Position.y() > Window::Get_Surf()->h) {
+    		Position.y() = 0;
+    	}
+    }
 }
 
 void Comet::Randomize_Points(int w, int h, int n) {
@@ -89,4 +102,8 @@ void Comet::Update(Subject* ChangedSubject) {
 	if (ChangedSubject != _collide) {
 		_collide = static_cast<ICollide*>(ChangedSubject);
 	}
+}
+
+void Comet::SetWrap(const bool isWrap) {
+    inBounds = isWrap;
 }

@@ -6,10 +6,9 @@ Level::Level(int _levelNum) : kills(0), score(0), callAnnouncement(false),
 	starfield = new Starfield();
     hud = new HUD(fe, true, true, true);
 	projVec.reserve(5);
-	cometVec.reserve(5);
-    playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));
-//    untilNext = (levelNum + 10)*(levelNum+5);
-    untilNext = 2;
+	cometVec.reserve(20);
+    playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
+    untilNext = (levelNum + (rand() % 1 + 9))*(levelNum + (rand() % 1 + 15));
 }
 
 Level::~Level() {
@@ -30,8 +29,8 @@ void Level::Draw() {	if (!playerVec.empty()) {
     }
 	starfield->Draw();
 	if (!cometVec.empty()) {
-        for (it = cometVec.begin(); it != cometVec.end(); ++it) {
-    		(*it)->Draw();
+        for (cIt = cometVec.begin(); cIt != cometVec.end(); ++cIt) {
+    		(*cIt)->Draw();
         }
 	}
 	if (!projVec.empty()) {
@@ -53,7 +52,7 @@ void Level::Handle_Events() {
 		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
 			switch (Event::Get_Event()->key.keysym.sym) {
                 case SDLK_ESCAPE : 
-						Set_State(StateManager::Child_Quit);
+                        Set_State(StateManager::Child_Exit);
                         break;
             	case SDLK_SPACE:
                     	if (!playerVec.empty()) {
@@ -80,18 +79,18 @@ void Level::Handle_Events() {
                     callAnnouncement = true;
                     break;
                 case SDLK_s:
-                	if (!playerVec.empty()) {
+                	if (playerVec.empty()) {
                         playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));
                     }
                     break;
-                /*case SDLK_t:
-                    	if (!playerVec.empty()) {
-                            for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        						cometVec.push_back(new Comet(iCollide, 300, 300, (rand() % 50+60), (rand() % 50+60), 
-                                    (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
-                            }
+                case SDLK_t:
+                	if (!playerVec.empty()) {
+                        for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
+                            cometVec.push_back(new Comet(iCollide, -20, -10, (rand() % 50+60), (rand() % 50+60), 
+                                (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
                         }
-            			break;*/
+                    }
+        			break;
            }
 		}
 	}
@@ -118,24 +117,31 @@ void Level::Logic() {	starfield->Logic();
         }
 	}
 	if (!cometVec.empty()) {
-        for (it = cometVec.begin(); it != cometVec.end();) {
-            if ((*it)->GetAlive()) {
-        		(*it)->Logic();
-                ++it;
+        for (cIt = cometVec.begin(); cIt != cometVec.end();) {
+            if ((*cIt)->GetAlive()) {
+        		(*cIt)->Logic();
+                // Check bounds, set to wrap
+                if (((*cIt)->GetPosition().x() > 0 && (*cIt)->GetPosition().x() < Window::Get_Surf()->w) &&
+                    ((*cIt)->GetPosition().y() > 0 && (*cIt)->GetPosition().y() < Window::Get_Surf()->h)) {
+                        (*cIt)->SetWrap(true);
+                }
+                ++cIt;
     		} else {
-                delete *it;
+                delete *cIt;
                 ++kills;
                 ++score;
-               it = cometVec.erase(it);
-                if (it != cometVec.end()) {
-                    ++it;
+               cIt = cometVec.erase(cIt);
+                if (cIt != cometVec.end()) {
+                    ++cIt;
                 }
             }
         }
 	}
 	if (!projVec.empty()) {
         for (it = projVec.begin(); it != projVec.end();) {
-            if ((*it)->GetAlive()) {
+            if ((*it)->GetAlive() && 
+                !((*it)->GetPosition().x() < -20 || (*it)->GetPosition().x() > Window::Get_Surf()->w+20 || 
+                    (*it)->GetPosition().y() < -20 || (*it)->GetPosition().y() > Window::Get_Surf()->h+20)) {
         		(*it)->Logic();
                 ++it;
 			} else {

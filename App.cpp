@@ -1,6 +1,6 @@
 #include "App.h"
 
-App::App() {
+App::App() : totalLevels(50) {
 	srand(time(0));
     winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
 	activeScreen = new Title();
@@ -59,10 +59,11 @@ void App::Set_GameScreen(StateManager::Global nextGlobal) {
             activeScreen = new Level(++levelNum);
             break;
 		} 
-		/*if (currLevel == global::numLevels) {
+        // Beat the game?! no wai
+		if (levelNum == totalLevels) {
+            delete activeScreen;
             activeScreen = new Title();
-			//currLevel = 0;
-        }*/
+        }
 		manager.Set_GlobalState(nextGlobal);
 		break;
 	case StateManager::Global_Exit :

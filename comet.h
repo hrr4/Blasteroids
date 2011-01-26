@@ -18,6 +18,7 @@ public:
 	virtual void Logic();
 	virtual void Handle_Events();
     virtual void Update(Subject*);
+    void SetWrap(const bool isWrap);
 
 private:
 	void Randomize_Points(int w, int h, int n);
@@ -25,5 +26,6 @@ private:
     float r, g, b, a;
 	float n, centerx, centery;
 	std::vector<float> vertVec;
+    bool inBounds;
 };
 #endif

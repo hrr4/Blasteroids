@@ -22,9 +22,11 @@ private:
     ICollide* iCollide;
     HUD* hud;
     std::vector<Player*> playerVec;
-    std::vector<Collider*> projVec, cometVec; 
+    std::vector<Collider*> projVec; 
+    std::vector<Comet*> cometVec; 
 	std::vector<Collider*>::iterator it;
 	std::vector<Player*>::iterator pIt;
+	std::vector<Comet*>::iterator cIt;
     int untilNext, kills, score, announceSize, levelNum;
     bool callAnnouncement;
 };

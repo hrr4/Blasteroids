@@ -9,7 +9,10 @@
 
 class Title : public IGameScreen {
 public:
+    enum Screen {Main, Scores, Options};
+public:
     Title();
+    Title(Screen forceScreen);
     virtual ~Title();
     virtual void Logic();
     virtual void Draw();
@@ -19,7 +22,6 @@ private:
     void DrawScores();
     void DrawOptions();
 private:
-    enum Screen {Main, Scores, Options};
     Screen active;
     Entity* starfield;
     int selectorX, selectorY;
