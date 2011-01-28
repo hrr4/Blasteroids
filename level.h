@@ -18,6 +18,8 @@ public:
     virtual void Draw();
     virtual void Handle_Events();
 private:
+    void Tutorial();
+private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;

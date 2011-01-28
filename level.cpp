@@ -22,8 +22,10 @@ Level::~Level() {
 void Level::Draw() {	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
         	(*pIt)->Draw();
-            hud->Thrust((*pIt)->GetPosition().x(), (*pIt)->GetPosition().y()-25,
-                (*pIt)->GetThrust(), 1);
+            hud->Thrust((*pIt)->GetPosition().x(), (*pIt)->GetPosition().y()-25, (*pIt)->GetThrust(), 1);
+            if (levelNum == 0) {
+                Tutorial();
+            }
         }
     }
 	stars.Draw();
@@ -159,4 +161,16 @@ void Level::Logic() {	if (!playerVec.empty()) {
         Set_State(StateManager::Child_Success);
     }*/
 
+}
+
+void Level::Tutorial() {
+    const std::string tutText = "Welcome to Blasteroids!\n"
+                                /*"Looks like it's your first time!\n"*/
+                                "It's pretty simple really.....\n"
+                                "Shoot Asteroids, get Points!\n"
+                                "You get bombs to play with as well\n"
+                                "If you run out of lives...well I think you know\n"
+                                "Have fun!\n";
+    hud->Status(tutText.c_str() ,"FreeSans", (*pIt)->GetPosition().x()-40, 
+        (*pIt)->GetPosition().y()-40, 13, 3);
 }

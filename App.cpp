@@ -7,7 +7,8 @@ App::App() : totalLevels(50) {
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
 	if (!initGL()) {        throw std::exception("OMG!");
-    }}
+    }
+    levelNum = 0;}
 
 App::~App() {
 	delete winmain, activeScreen;
