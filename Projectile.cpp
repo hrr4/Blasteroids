@@ -2,7 +2,7 @@
 
 float Projectile::projVec[12] = {-2, 2, 0, -2, -2, 0, 2, -2, 0, 2, 2, 0};
 
-Projectile::Projectile(Projectile_Type projType, ICollide* c, float _x, float _y, float _angle, 
+Projectile::Projectile(Projectile_Type projType, ICollide* c, Vectorf _v, float _x, float _y, float _angle, 
 	float _r, float _g, float _b, float _a) :
 	offset(100) {
 	Position.x() = _x, Position.y() = _y, angle = _angle, r = _r, g = _g, b = _b, a = _a;
@@ -16,8 +16,8 @@ Projectile::Projectile(Projectile_Type projType, ICollide* c, float _x, float _y
 	isAlive = true;
 	isPassable = false;
 
-	Velocity.x() = speed * sinf(angle);
-	Velocity.y() = speed * cosf(angle);
+    Velocity.x() = speed * sinf(angle) + _v.x();
+	Velocity.y() = speed * cosf(angle) + _v.y();
 
 	speed = sqrtf(Velocity.x()*Velocity.x() + Velocity.y()*Velocity.y());
 
@@ -53,8 +53,8 @@ glPopMatrix();
 }
 
 void Projectile::Logic() {
-	 Position.x() = Position.x() + speed * sinf(heading);
-	 Position.y() = Position.y() - speed * cosf(heading);
+	 Position.x() += speed * sinf(heading);
+	 Position.y() -= speed * cosf(heading);
 	 if (fadetimeout < SDL_GetTicks() && a > 0) {
 		 a -= 0.05;
 		 fadetimeout = SDL_GetTicks()+offset;
@@ -63,10 +63,10 @@ void Projectile::Logic() {
 		isAlive = false;
 }
 
-void Projectile::Handle_Events() {}
-
 void Projectile::Update(Subject* ChangedSubject) {
 	if (ChangedSubject != _collide) {
 		_collide = static_cast<ICollide*>(ChangedSubject);
 	}
 }
+
+void Projectile::Handle_Events() {}

@@ -140,3 +140,5 @@ void Player::Update(Subject* ChangedSubject) {
 bool Player::CanShoot() const {return canShoot;}
 
 float Player::GetThrust() const { return thrust; }
+
+Vectorf Player::GetSpeed() const { return Velocity; }

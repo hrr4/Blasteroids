@@ -19,6 +19,7 @@ public:
 	virtual void Update(Subject*);
 	void Shoot();
     float GetThrust() const;
+    Vectorf GetSpeed() const;
 private:
 	void Render();
 	float a, thrust, Heading, Rotation, Force; 

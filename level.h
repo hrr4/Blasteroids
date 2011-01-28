@@ -18,7 +18,7 @@ public:
     virtual void Draw();
     virtual void Handle_Events();
 private:
-    Entity* starfield;
+    Starfield stars;
     ICollide* iCollide;
     HUD* hud;
     std::vector<Player*> playerVec;

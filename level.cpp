@@ -3,7 +3,7 @@
 Level::Level(int _levelNum) : kills(0), score(0), callAnnouncement(false),
     announceSize(60), levelNum(_levelNum) {
 	iCollide = new ICollide();
-	starfield = new Starfield();
+	stars = Starfield();
     hud = new HUD(fe, true, true, true);
 	projVec.reserve(5);
 	cometVec.reserve(20);
@@ -16,7 +16,6 @@ Level::~Level() {
     playerVec.clear();
     cometVec.clear();
     delete iCollide;
-    delete starfield;
     delete hud;
 }
 
@@ -27,7 +26,7 @@ void Level::Draw() {	if (!playerVec.empty()) {
                 (*pIt)->GetThrust(), 1);
         }
     }
-	starfield->Draw();
+	stars.Draw();
 	if (!cometVec.empty()) {
         for (cIt = cometVec.begin(); cIt != cometVec.end(); ++cIt) {
     		(*cIt)->Draw();
@@ -59,7 +58,7 @@ void Level::Handle_Events() {
                             for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
         						if ((*pIt)->CanShoot()) {
         							projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
-        								(*pIt)->GetPosition().x()+sinf((*pIt)->GetAngle()), 
+                                        (*pIt)->GetSpeed(), (*pIt)->GetPosition().x()+sinf((*pIt)->GetAngle()), 
         								(*pIt)->GetPosition().y()+cosf((*pIt)->GetAngle()),
         								(*pIt)->GetAngle()));
         							(*pIt)->Shoot();
@@ -103,8 +102,7 @@ void Level::Handle_Events() {
     }
 }
 
-void Level::Logic() {	starfield->Logic();
-	if (!playerVec.empty()) {
+void Level::Logic() {	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end();) {
             if ((*pIt)->GetAlive()) {
         		(*pIt)->Logic();

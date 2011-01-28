@@ -8,16 +8,12 @@
 #include "Utility.h"
 #include "star.h"
 
-class Starfield : public Entity {
-public:
+//class Starfield : public Entity {
+struct Starfield {
 	Starfield();
-	virtual ~Starfield();
+	~Starfield();
 	virtual void Draw();
-	virtual void Logic();
-	virtual void Handle_Events();
 private:
-    void Render();
-	int speed, r, g, b, points;
-    std::vector<Star> starVec(5);
+    std::vector<Star> starVec;
 };
 #endif

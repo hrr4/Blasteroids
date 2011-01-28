@@ -1,18 +1,16 @@
 #include "title.h"
 
 Title::Title() : selectorX(Window::Get_Surf()->w-105), selectorY(Window::Get_Surf()->h-45) {
-    starfield = new Starfield();
+    stars = Starfield();
     active = Main;
 }
 
 Title::Title(Screen forceScreen) : selectorX(Window::Get_Surf()->w-105), selectorY(Window::Get_Surf()->h-45) {
-    starfield = new Starfield();
+    stars = Starfield();
     active = forceScreen;
 }
 
-Title::~Title() {
-    delete starfield;
-}
+Title::~Title() {}
 
 void Title::DrawMain() {
     //TEST = fe->Draw("Blasteroids", 48, "04b_11", 50, 400);
@@ -51,7 +49,7 @@ void Title::DrawOptions() {
     fe->Draw(">", 12, "04b_11", selectorX, selectorY);
 }
 void Title::Draw() {
-    starfield->Draw();
+    stars.Draw();
     switch (active) {
         case Main:
             DrawMain();
@@ -100,6 +98,4 @@ void Title::Handle_Events() {
 	}
 }
 
-void Title::Logic() {
-	starfield->Logic();
-}
+void Title::Logic() {}

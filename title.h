@@ -22,8 +22,8 @@ private:
     void DrawScores();
     void DrawOptions();
 private:
+    Starfield stars;
     Screen active;
-    Entity* starfield;
     int selectorX, selectorY;
 };
 #endif
