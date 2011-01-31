@@ -27,5 +27,6 @@ private:
 	float n, centerx, centery;
 	std::vector<float> vertVec;
     bool inBounds;
+    static std::vector<int> testVec;
 };
 #endif

@@ -18,11 +18,14 @@ public:
 	virtual void Handle_Events()=0;
 	virtual void Logic()=0;
 	virtual void Draw()=0;
+    // Getters
 	virtual Vectorf GetPosition() const;
 	bool GetAlive() const;
 	float GetRadius() const;
 	float GetAngle() const;
 	int GetLayer() const;
+    // Setters
+    void SetPosition(float _x, float _y);
 protected:
 	SDL_Rect r_Rect, r_Clip;
 	float angle, speed, radius, a; 

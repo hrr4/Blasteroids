@@ -1,14 +1,25 @@
 #include "level.h"
 
-Level::Level(int _levelNum) : kills(0), score(0), callAnnouncement(false),
-    announceSize(60), levelNum(_levelNum) {
+bool Level::finishTutorial = false;
+int Level::playerLives = 3;
+int Level::score = 0;
+
+Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(false),
+    announceSize(90), levelNum(_levelNum) {
 	iCollide = new ICollide();
 	stars = Starfield();
     hud = new HUD(fe, true, true, true);
 	projVec.reserve(5);
 	cometVec.reserve(20);
     playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
-    untilNext = (levelNum + (rand() % 1 + 9))*(levelNum + (rand() % 1 + 15));
+    //untilNext = (levelNum + (rand() % 1 + 9))*(levelNum + (rand() % 1 + 15));
+    untilNext = 3;
+    if (levelNum == 0) {
+        playerLives = 3;
+        score = 0;
+    }
+    // CREATE AND IMPLEMENT EMITTERS
+    cometEmitter = Emitter(new Comet());
 }
 
 Level::~Level() {
@@ -23,15 +34,27 @@ void Level::Draw() {	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
         	(*pIt)->Draw();
             hud->Thrust((*pIt)->GetPosition().x(), (*pIt)->GetPosition().y()-25, (*pIt)->GetThrust(), 1);
-            if (levelNum == 0) {
+            if (levelNum == 0 && !finishTutorial) {
                 Tutorial();
+            }            /*if ((untilNext - kills) <= 10) {
+                std::string remaining = itos(untilNext-kills)+" Remaining";
+                hud->Status(remaining ,"FreeSans", (*pIt)->GetPosition().x()-40, 
+                    (*pIt)->GetPosition().y()-40, 13, 3);
+            }*/            if (callCometScore) {
+                int interval = 10;
+                int timeout = SDL_GetTicks() + interval;
+                cometScore = (rand() % 20);
+                std::string wtf2 = ("+" + itos(cometScore));
+                /*hud->Status(wtf2.c_str(),"FreeSans", (*pIt)->GetPosition().x()-40, 
+                    (*pIt)->GetPosition().y()-40, 13, 3);*/
+                //callCometScore = false;
             }
         }
     }
 	stars.Draw();
 	if (!cometVec.empty()) {
         for (cIt = cometVec.begin(); cIt != cometVec.end(); ++cIt) {
-    		(*cIt)->Draw();
+       		(*cIt)->Draw();
         }
 	}
 	if (!projVec.empty()) {
@@ -41,7 +64,7 @@ void Level::Draw() {	if (!playerVec.empty()) {
 	}
     hud->Score(score, 0, 10);
     if (callAnnouncement) {
-        hud->Announcement("TESTZ0RZ!", "04b_11", 
+        hud->Announcement(itos(levelNum).c_str(), "04b_11", 
             Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
     }
 }
@@ -73,7 +96,7 @@ void Level::Handle_Events() {
                             for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
         						cometVec.push_back(new Comet(iCollide, 300.0f, 300.0f, 
                                     static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-                                    (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
+                                    (rand() % 3 + 5), levelNum + (rand() % 1 + 3), (*pIt)->GetPosition()));
                             }
                         }
             			break;
@@ -90,7 +113,7 @@ void Level::Handle_Events() {
                         for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
                             cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
                                 static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-                                (rand() % 3 + 5), 5, (*pIt)->GetPosition()));
+                                (rand() % 3 + 5), levelNum + (rand() % 1 + 3), (*pIt)->GetPosition()));
                         }
                     }
         			break;
@@ -107,10 +130,12 @@ void Level::Handle_Events() {
 void Level::Logic() {	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end();) {
             if ((*pIt)->GetAlive()) {
-        		(*pIt)->Logic();
-                ++pIt;
+        		(*pIt)->Logic();                ++pIt;
     		} else {
                 delete *pIt;
+                if (playerLives != 0) {
+                    playerLives--;
+                }
                 pIt = playerVec.erase(pIt);
                 if (pIt != playerVec.end()) {
                     ++pIt;
@@ -131,8 +156,8 @@ void Level::Logic() {	if (!playerVec.empty()) {
     		} else {
                 delete *cIt;
                 ++kills;
-                ++score;
-               cIt = cometVec.erase(cIt);
+                score += cometScore;
+                cIt = cometVec.erase(cIt);
                 if (cIt != cometVec.end()) {
                     ++cIt;
                 }
@@ -148,6 +173,7 @@ void Level::Logic() {	if (!playerVec.empty()) {
                 ++it;
 			} else {
                 delete *it;
+                callCometScore = true;
                 it = projVec.erase(it);
                 if (it != projVec.end()) {
                     ++it;
@@ -157,20 +183,25 @@ void Level::Logic() {	if (!playerVec.empty()) {
     }
 
     // Switch Level Logic
-    /*if (kills == untilNext) {
+    if (kills == untilNext) {
         Set_State(StateManager::Child_Success);
-    }*/
-
+    }
 }
 
 void Level::Tutorial() {
     const std::string tutText = "Welcome to Blasteroids!\n"
-                                /*"Looks like it's your first time!\n"*/
+                                "Looks like it's your first time!\n"
                                 "It's pretty simple really.....\n"
                                 "Shoot Asteroids, get Points!\n"
                                 "You get bombs to play with as well\n"
                                 "If you run out of lives...well I think you know\n"
                                 "Have fun!\n";
-    hud->Status(tutText.c_str() ,"FreeSans", (*pIt)->GetPosition().x()-40, 
-        (*pIt)->GetPosition().y()-40, 13, 3);
+    /*hud->Status(tutText.c_str() ,"FreeSans", (*pIt)->GetPosition().x()-40, 
+        (*pIt)->GetPosition().y()-40, 13, 3);*/
+    //finishTutorial = true;
 }
+
+/*void Level::CometScore() {
+    hud->Status(itos(,"FreeSans", (*pIt)->GetPosition().x()-40, 
+        (*pIt)->GetPosition().y()-40, 13, 3);
+  */  

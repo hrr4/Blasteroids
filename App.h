@@ -28,7 +28,8 @@ private:
 	IGameScreen* activeScreen;
 	StateManager manager;
 	FPS delta;
-	bool isRunning, levelNum, totalLevels;
+	bool isRunning; 
+    int levelNum, totalLevels;
     unsigned long int next_tick;
 };
 

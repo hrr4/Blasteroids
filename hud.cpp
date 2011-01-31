@@ -41,8 +41,8 @@ glPopMatrix();
 }
 
 void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, int& _isize) {
-    box = fe->GetBBox(_m.c_str(), _f.c_str());
-    GetBBoxMiddle(box);
+    /*box = fe->GetBBox(_m.c_str(), _f.c_str());
+    GetBBoxMiddle(box);*/
 
 glPushMatrix();
     if (_isize > 0) {
@@ -64,9 +64,11 @@ void HUD::GetBBoxMiddle(const FTBBox& _b) {
     //aY = (y1+y2)/2);
 }
 
-void HUD::Status(const std::string _m, const std::string _f, float _x, float _y, int _size, int _time) {
-    static std::string statusText = _m.substr(0, _m.find_first_of("\n"));
-    static int subSize = statusText.length();
+void HUD::Status(const std::string& _m, const std::string _f, float _x, float _y, int _size, int _time) {
+    static size_t lastpos = _m.find("\n");
+    static size_t nextpos = _m.find("\n");
+    static std::string statusText = _m.substr(0, nextpos);
+
     std::string statusText2;
 
     static int maxTime = SDL_GetTicks() + (_time * 1000);
@@ -74,11 +76,20 @@ glPushMatrix();
     if (SDL_GetTicks() < maxTime) {
         glColor4f(1, 1, 1, 1);
         fe->Draw(statusText.c_str(), _size, _f.c_str(), _x, _y);
-    } else if (subSize < _m.length()) {
-        // Problem here: need a way to count where i am in the string.. or how far or something. Latarz
-        statusText2 = _m.substr(statusText.size()+1, _m.find_first_of("\n"));
-        subSize += statusText.length()+1;
+    } else if (_m.find("\n", lastpos) != _m.npos) {
+        //nextpos += 1;
+        lastpos += 1;
+        //statusText2 = _m.substr(statusText.size()+1, _m.find_first_of("\n"));
+        /*pos = statusText.begin();
+        subSize += statusText.length()+1;*/
+        //statusText2 = _m.substr(
+        //nextpos = _m.find_first_of("\n", statusText2);
+        nextpos = _m.find("\n", lastpos);
+        statusText = _m.substr(lastpos, nextpos);
+        lastpos = nextpos;
         maxTime = SDL_GetTicks() + (_time * 1000);
-    }
+    } else {
+        maxTime = SDL_GetTicks() + (_time * 1000);
+    };
 glPopMatrix();
 };

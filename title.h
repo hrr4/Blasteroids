@@ -6,6 +6,7 @@
 #include "starfield.h"
 #include "hud.h"
 #include "Utility.h"
+#include "comet.h"
 
 class Title : public IGameScreen {
 public:
@@ -23,6 +24,7 @@ private:
     void DrawOptions();
 private:
     Starfield stars;
+    Comet* comets;
     Screen active;
     int selectorX, selectorY;
 };

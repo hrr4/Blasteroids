@@ -28,7 +28,7 @@ public:
     void Score(const int& _s, const float _x, const float _y);
     void Amount(int& _a);
     void Announcement(const std::string _m, const std::string _f, float _x, float _y, int& _isize);
-    void Status(const std::string _m, const std::string _f, float _x, float _y, int _size, int _time);
+    void Status(const std::string& _m, const std::string _f, float _x, float _y, int _size, int _time);
 
 private:
     void GetBBoxMiddle(const FTBBox& _x);
