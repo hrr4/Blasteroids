@@ -12,7 +12,6 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(f
         playerLives = 3;
         score = 0;
     }
-    //cometEmitter = Emitter(new Comet(iCollide, 50, 50, 50, 50, 5, 3, playerVec[0]->GetPosition()), 50, 50, 5);
 }
 
 Level::~Level() {
@@ -60,11 +59,6 @@ void Level::Draw() {	if (!playerVec.empty()) {
         hud->Announcement(itos(levelNum).c_str(), "04b_11", 
             Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
     }
-	/*if (!testVec.empty()) {
-        for (it = testVec.begin(); it != testVec.end(); ++it) {
-       		(*it)->Draw();
-        }
-	}*/
 }
 
 void Level::Handle_Events() {
@@ -126,22 +120,18 @@ void Level::Handle_Events() {
 }
 
 void Level::Logic() {
-    /*if (cometEmitter.NextEmit()) {        testVec.push_back(cometEmitter.EmitNew());    }	if (!testVec.empty()) {
-        for (it = testVec.begin(); it != testVec.end(); ++it) {
-       		(*it)->Logic();
-        }
-	}*/
     if (SDL_GetTicks() > cometSpawn) {
         cometSpawn = SDL_GetTicks() + 2000;
 
-        cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
+        cometVec.push_back(new Comet(iCollide, Utility::UGen_Random(0.0f, static_cast<float>(Window::Get_Surf()->w)), Utility::UGen_Random(0.0f, static_cast<float>(Window::Get_Surf()->h)),
             static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-            (rand() % 3 + 5), static_cast<float>(levelNum + (rand() % 1 + 6)), playerVec[0]->GetPosition()));
+            (rand() % 3 + 5), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), playerVec[0]->GetPosition()));
     }
 	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end();) {
             if ((*pIt)->GetAlive()) {
-        		(*pIt)->Logic();                ++pIt;
+        		(*pIt)->Logic();                
+			++pIt;
     		} else {
                 delete *pIt;
                 if (playerLives != 0) {
