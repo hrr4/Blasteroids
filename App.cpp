@@ -2,13 +2,13 @@
 
 App::App() : totalLevels(50) {
 	srand(time(0));
-    winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
+	winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
 	activeScreen = new Title();
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
-	if (!initGL()) {        throw std::exception("OMG!");
-    }
-    levelNum = 0;}
+	initGL();
+	levelNum = 0;
+}
 
 App::~App() {
 	delete winmain, activeScreen;
@@ -18,12 +18,12 @@ void App::Loop() {
     next_tick = SDL_GetTicks () + 10;
 	while (manager.Get_GlobalState() != StateManager::Global_Exit) {
 		//delta.Start();
-        if (SDL_GetTicks() > next_tick ) {
-            next_tick = SDL_GetTicks() + 10;
-    		activeScreen->Handle_Events();
-    		activeScreen->Logic();
-        }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if (SDL_GetTicks() > next_tick ) {
+		    next_tick = SDL_GetTicks() + 10;
+			activeScreen->Handle_Events();
+			activeScreen->Logic();
+		}
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		activeScreen->Draw();
 		SDL_GL_SwapBuffers();
 		Query_GameScreen();

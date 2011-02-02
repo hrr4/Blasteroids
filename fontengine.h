@@ -3,7 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include <FTGL\ftgl.h>
+#include <FTGL/ftgl.h>
 #include <string>
 #include <map>
 
