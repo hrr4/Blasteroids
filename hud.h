@@ -16,6 +16,8 @@
       Score - Just a number incrementing?
       Amount - Amount of enemies... left?
       Level Num / Messages - In the middle, sort of flash for a second or two. Have them fade in then out.
+      Status Messages - Small text near player or comets on death. Allows game to explain basic things to 
+         player and display how much comet is worth.
 */
 
 class HUD {
@@ -26,6 +28,7 @@ public:
     void Score(const int& _s, const float _x, const float _y);
     void Amount(int& _a);
     void Announcement(const std::string _m, const std::string _f, float _x, float _y, int& _isize);
+    void Status(const std::string& _m, const std::string _f, float _x, float _y, int _size, int _time);
 
 private:
     void GetBBoxMiddle(const FTBBox& _x);
