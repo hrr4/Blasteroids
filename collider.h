@@ -7,10 +7,11 @@
 
 class Collider : public Observer, public Entity {
 public:
+    Collider();
 	virtual ~Collider();
 	bool CheckCollision();
 protected:
-	Collider();
+	//Collider();
 	ICollide* _collide;
 };
 

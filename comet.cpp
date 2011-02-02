@@ -5,7 +5,6 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
 	r = _r, g = _g, b = _b, a = _a, n = _n;
 	Position.z() = angle = 0;
-	//speed = Utility::UGen_Random(0.1, 1.0);
     speed = _vel;
 	radius = (_h/2) + ((_w*_w)/(8*_h));
     centerx = Position.x()+r_Rect.w/2;
@@ -16,8 +15,6 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 	Direction.x() = Position.x() - _vec.x();
 	Direction.y() = Position.y() - _vec.y();
 	Direction.normalize();
-
-	Velocity.x() = Velocity.y() = speed;
 
 	isAlive = true;
 	isPassable = false;

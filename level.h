@@ -8,7 +8,6 @@
 #include "starfield.h"
 #include "icollide.h"
 #include "hud.h"
-//#include "emitter.h"
 #include <string>
 #include <vector>
 
@@ -22,22 +21,21 @@ public:
 private:
     void Tutorial();
     void ScoreDraw(int& score);
+    float randOutside(float _first, float _second, float _distance);
 private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
-    //Emitter cometEmitter;
     std::vector<Player*> playerVec;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
 	std::vector<Collider*>::iterator it;
 	std::vector<Player*>::iterator pIt;
 	std::vector<Comet*>::iterator cIt;
-    int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn;
+    int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
     bool callAnnouncement, callCometScore; 
     static bool finishTutorial;
     static int playerLives, score;
-    //std::vector<Collider*> testVec;
 };
 
 #endif

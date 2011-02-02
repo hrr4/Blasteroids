@@ -56,7 +56,7 @@ void Projectile::Logic() {
 	 Position.x() += speed * sinf(heading);
 	 Position.y() -= speed * cosf(heading);
 	 if (fadetimeout < SDL_GetTicks() && a > 0) {
-		 a -= 0.05;
+		 a -= 0.15;
 		 fadetimeout = SDL_GetTicks()+offset;
 	 }
 	 if (a <= 0 || CheckCollision()) 

@@ -5,14 +5,13 @@ int Level::playerLives = 3;
 int Level::score = 0;
 
 Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(false), announceSize(90), levelNum(_levelNum), 
-    stars(Starfield()), untilNext(3), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+2000) {
+    stars(Starfield()), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+2000), playerRespawn(SDL_GetTicks()+2000) {
     playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
-    //untilNext = (levelNum + (rand() % 1 + 9))*(levelNum + (rand() % 1 + 15));
-    if (levelNum == 0) {
+    untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
+    if (levelNum == 1) {
         playerLives = 3;
         score = 0;
     }
-    //cometEmitter = Emitter(new Comet(iCollide, 50, 50, 50, 50, 5, 3, playerVec[0]->GetPosition()), 50, 50, 5);
 }
 
 Level::~Level() {
@@ -55,16 +54,12 @@ void Level::Draw() {	if (!playerVec.empty()) {
     		(*it)->Draw();
         }
 	}
-    hud->Score(score, 0, 10);
+    hud->Simple(score, 0, 10);
+    hud->Simple(untilNext-kills, (Window::Get_Surf()->w/2), 10);
     if (callAnnouncement) {
         hud->Announcement(itos(levelNum).c_str(), "04b_11", 
             Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
     }
-	/*if (!testVec.empty()) {
-        for (it = testVec.begin(); it != testVec.end(); ++it) {
-       		(*it)->Draw();
-        }
-	}*/
 }
 
 void Level::Handle_Events() {
@@ -126,31 +121,38 @@ void Level::Handle_Events() {
 }
 
 void Level::Logic() {
-    /*if (cometEmitter.NextEmit()) {        testVec.push_back(cometEmitter.EmitNew());    }	if (!testVec.empty()) {
-        for (it = testVec.begin(); it != testVec.end(); ++it) {
-       		(*it)->Logic();
-        }
-	}*/
-    if (SDL_GetTicks() > cometSpawn) {
-        cometSpawn = SDL_GetTicks() + 2000;
 
-        cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
-            static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-            (rand() % 3 + 5), static_cast<float>(levelNum + (rand() % 1 + 6)), playerVec[0]->GetPosition()));
-    }
 	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end();) {
             if ((*pIt)->GetAlive()) {
-        		(*pIt)->Logic();                ++pIt;
-    		} else {
-                delete *pIt;
+        		(*pIt)->Logic();
+                if (SDL_GetTicks() > cometSpawn) {
+                    cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
+                        static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
+                        (*pIt)->GetPosition()));
+                    cometSpawn = SDL_GetTicks() + 2000;
+                }
+                ++pIt;
+    		} else if (SDL_GetTicks() > playerRespawn) {
                 if (playerLives != 0) {
                     playerLives--;
-                }
+                    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
+                    playerRespawn = SDL_GetTicks() + 2000;
+
+                delete *pIt;
                 pIt = playerVec.erase(pIt);
                 if (pIt != playerVec.end()) {
                     ++pIt;
                 }
+                } else {
+                    Set_State(StateManager::Child_Exit);
+                }
+            /*} else {
+                delete *pIt;
+                pIt = playerVec.erase(pIt);
+                if (pIt != playerVec.end()) {
+                    ++pIt;
+                }*/
             }
         }
 	}
@@ -193,7 +195,7 @@ void Level::Logic() {
         }
     }
 
-    // Switch Level Logic
+    // Switch Level
     if (kills == untilNext) {
         Set_State(StateManager::Child_Success);
     }
@@ -216,3 +218,12 @@ void Level::Tutorial() {
     hud->Status(itos(,"FreeSans", (*pIt)->GetPosition().x()-40, 
         (*pIt)->GetPosition().y()-40, 13, 3);
   */  
+
+float Level::randOutside(float _first, float _second, float _distance) {
+    int test = Utility::UGen_Random(_first, _second);
+    if (test <= (_second-_first)/2) {
+        return Utility::UGen_Random((_first-_distance), _first);
+    } else {
+        return Utility::UGen_Random((_second-_distance), _second);
+    }
+}

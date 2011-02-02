@@ -1,7 +1,7 @@
 #ifndef COMET_H
 #define COMET_H
 
-#include "entity.h"
+#include "Entity.h"
 #include "collider.h"
 #include "icollide.h"
 #include "fps.h"
