@@ -4,22 +4,15 @@ bool Level::finishTutorial = false;
 int Level::playerLives = 3;
 int Level::score = 0;
 
-Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(false),
-    announceSize(90), levelNum(_levelNum) {
-	iCollide = new ICollide();
-	stars = Starfield();
-    hud = new HUD(fe, true, true, true);
-	projVec.reserve(5);
-	cometVec.reserve(20);
-    playerVec.reserve(2);    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
+Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(false), announceSize(90), levelNum(_levelNum), 
+    stars(Starfield()), untilNext(3), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+2000) {
+    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
     //untilNext = (levelNum + (rand() % 1 + 9))*(levelNum + (rand() % 1 + 15));
-    untilNext = 3;
     if (levelNum == 0) {
         playerLives = 3;
         score = 0;
     }
-    // CREATE AND IMPLEMENT EMITTERS
-    cometEmitter = Emitter(new Comet());
+    //cometEmitter = Emitter(new Comet(iCollide, 50, 50, 50, 50, 5, 3, playerVec[0]->GetPosition()), 50, 50, 5);
 }
 
 Level::~Level() {
@@ -67,6 +60,11 @@ void Level::Draw() {	if (!playerVec.empty()) {
         hud->Announcement(itos(levelNum).c_str(), "04b_11", 
             Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
     }
+	/*if (!testVec.empty()) {
+        for (it = testVec.begin(); it != testVec.end(); ++it) {
+       		(*it)->Draw();
+        }
+	}*/
 }
 
 void Level::Handle_Events() {
@@ -127,7 +125,20 @@ void Level::Handle_Events() {
     }
 }
 
-void Level::Logic() {	if (!playerVec.empty()) {
+void Level::Logic() {
+    /*if (cometEmitter.NextEmit()) {        testVec.push_back(cometEmitter.EmitNew());    }	if (!testVec.empty()) {
+        for (it = testVec.begin(); it != testVec.end(); ++it) {
+       		(*it)->Logic();
+        }
+	}*/
+    if (SDL_GetTicks() > cometSpawn) {
+        cometSpawn = SDL_GetTicks() + 2000;
+
+        cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
+            static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
+            (rand() % 3 + 5), static_cast<float>(levelNum + (rand() % 1 + 6)), playerVec[0]->GetPosition()));
+    }
+	if (!playerVec.empty()) {
         for (pIt = playerVec.begin(); pIt != playerVec.end();) {
             if ((*pIt)->GetAlive()) {
         		(*pIt)->Logic();                ++pIt;
