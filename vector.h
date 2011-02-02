@@ -124,7 +124,7 @@ template <class T>
 inline bool operator!=(const Vector<T>& one, const Vector<T>& two) {
   return !(one == two);
 }
-
+ 
 /*
 template<class T>
 std::ostream& operator<<(std::ostream& os, const Vector<T>& vec) {
