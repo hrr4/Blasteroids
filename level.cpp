@@ -127,26 +127,31 @@ void Level::Logic() {
             if ((*pIt)->GetAlive()) {
         		(*pIt)->Logic();
                 if (SDL_GetTicks() > cometSpawn) {
-                    cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
-                        static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
-                        (*pIt)->GetPosition()));
+                    cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
+					    randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
+					static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
+					static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
+					(*pIt)->GetPosition()));
                     cometSpawn = SDL_GetTicks() + 2000;
                 }
                 ++pIt;
-    		} else if (SDL_GetTicks() > playerRespawn) {
-                if (playerLives != 0) {
-                    playerLives--;
-                    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
-                    playerRespawn = SDL_GetTicks() + 2000;
+    		} else {
+			if (SDL_GetTicks() > playerRespawn) {
+				if (playerLives != 0) {
+				    playerLives--;
+				    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
+				    playerRespawn = SDL_GetTicks() + 2000;
+				} else {
+				    Set_State(StateManager::Child_Exit);
+				}
+			} else {
 
-                delete *pIt;
-                pIt = playerVec.erase(pIt);
-                if (pIt != playerVec.end()) {
-                    ++pIt;
-                }
-                } else {
-                    Set_State(StateManager::Child_Exit);
-                }
+				delete *pIt;
+				pIt = playerVec.erase(pIt);
+				if (pIt != playerVec.end()) {
+				    ++pIt;
+				}
+			}
             /*} else {
                 delete *pIt;
                 pIt = playerVec.erase(pIt);
@@ -180,8 +185,8 @@ void Level::Logic() {
 	if (!projVec.empty()) {
         for (it = projVec.begin(); it != projVec.end();) {
             if ((*it)->GetAlive() && 
-                !((*it)->GetPosition().x() < -20 || (*it)->GetPosition().x() > Window::Get_Surf()->w+20 || 
-                    (*it)->GetPosition().y() < -20 || (*it)->GetPosition().y() > Window::Get_Surf()->h+20)) {
+                !((*it)->GetPosition().x() < -10 || (*it)->GetPosition().x() > Window::Get_Surf()->w+10 || 
+                    (*it)->GetPosition().y() < -10 || (*it)->GetPosition().y() > Window::Get_Surf()->h+10)) {
         		(*it)->Logic();
                 ++it;
 			} else {
