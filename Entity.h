@@ -26,6 +26,7 @@ public:
 	int GetLayer() const;
     // Setters
     void SetPosition(float _x, float _y);
+    void SetAlive(bool _status);
 protected:
 	SDL_Rect r_Rect, r_Clip;
 	float angle, speed, radius, a; 

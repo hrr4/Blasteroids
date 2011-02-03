@@ -26,11 +26,10 @@ private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
-    std::vector<Player*> playerVec;
+    Player mainPlayer;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
 	std::vector<Collider*>::iterator it;
-	std::vector<Player*>::iterator pIt;
 	std::vector<Comet*>::iterator cIt;
     int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
     bool callAnnouncement, callCometScore; 

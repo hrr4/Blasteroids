@@ -5,8 +5,8 @@ int Level::playerLives = 3;
 int Level::score = 0;
 
 Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(false), announceSize(90), levelNum(_levelNum), 
-    stars(Starfield()), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+2000), playerRespawn(SDL_GetTicks()+2000) {
-    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
+    stars(Starfield()), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000), playerRespawn(SDL_GetTicks()+2000) {
+    mainPlayer = Player(iCollide, 320, 240, 25, 25);
     untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
     if (levelNum == 1) {
         playerLives = 3;
@@ -16,32 +16,27 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), callCometScore(f
 
 Level::~Level() {
     projVec.clear();
-    playerVec.clear();
     cometVec.clear();
     delete iCollide;
     delete hud;
 }
 
-void Level::Draw() {	if (!playerVec.empty()) {
-        for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        	(*pIt)->Draw();
-            hud->Thrust((*pIt)->GetPosition().x(), (*pIt)->GetPosition().y()-25, (*pIt)->GetThrust(), 1);
-            if (levelNum == 0 && !finishTutorial) {
-                Tutorial();
-            }            /*if ((untilNext - kills) <= 10) {
-                std::string remaining = itos(untilNext-kills)+" Remaining";
-                hud->Status(remaining ,"FreeSans", (*pIt)->GetPosition().x()-40, 
-                    (*pIt)->GetPosition().y()-40, 13, 3);
-            }*/            if (callCometScore) {
-                int interval = 10;
-                int timeout = SDL_GetTicks() + interval;
-                cometScore = (rand() % 20);
-                std::string wtf2 = ("+" + itos(cometScore));
-                /*hud->Status(wtf2.c_str(),"FreeSans", (*pIt)->GetPosition().x()-40, 
-                    (*pIt)->GetPosition().y()-40, 13, 3);*/
-                //callCometScore = false;
-            }
-        }
+void Level::Draw() {    mainPlayer.Draw();
+    hud->Thrust(mainPlayer.GetPosition().x(), mainPlayer.GetPosition().y()-25, mainPlayer.GetThrust(), 1);
+    if (levelNum == 0 && !finishTutorial) {
+        Tutorial();
+    }    /*if ((untilNext - kills) <= 10) {
+        std::string remaining = itos(untilNext-kills)+" Remaining";
+        hud->Status(remaining ,"FreeSans", mainPlayer.GetPosition().x()-40, 
+            (*mainPlayer.GetPosition().y()-40, 13, 3);
+    }*/    if (callCometScore) {
+        int interval = 10;
+        int timeout = SDL_GetTicks() + interval;
+        cometScore = (rand() % 20);
+        std::string wtf2 = ("+" + itos(cometScore));
+        /*hud->Status(wtf2.c_str(),"FreeSans", mainPlayer.GetPosition().x()-40, 
+            mainPlayer.GetPosition().y()-40, 13, 3);*/
+        //callCometScore = false;
     }
 	stars.Draw();
 	if (!cometVec.empty()) {
@@ -69,98 +64,61 @@ void Level::Handle_Events() {
 		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
 			switch (Event::Get_Event()->key.keysym.sym) {
                 case SDLK_ESCAPE : 
-                        Set_State(StateManager::Child_Exit);
-                        break;
+                    Set_State(StateManager::Child_Exit);
+                    break;
             	case SDLK_SPACE:
-                    	if (!playerVec.empty()) {
-                            for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        						if ((*pIt)->CanShoot()) {
-        							projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
-                                        (*pIt)->GetSpeed(), (*pIt)->GetPosition().x()+sinf((*pIt)->GetAngle()), 
-        								(*pIt)->GetPosition().y()+cosf((*pIt)->GetAngle()),
-        								(*pIt)->GetAngle()));
-        							(*pIt)->Shoot();
-        						}
-                            }
-                        }
-            			break;
+            		if (mainPlayer.CanShoot()) {
+            			projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
+                            mainPlayer.GetSpeed(), mainPlayer.GetPosition().x()+sinf(mainPlayer.GetAngle()), 
+            				mainPlayer.GetPosition().y()+cosf(mainPlayer.GetAngle()),
+            				mainPlayer.GetAngle()));
+            			mainPlayer.Shoot();
+            		}
+        			break;
             	case SDLK_c:
-                    	if (!playerVec.empty()) {
-                            for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        						cometVec.push_back(new Comet(iCollide, 300.0f, 300.0f, 
-                                    static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-                                    (rand() % 3 + 5), levelNum + (rand() % 1 + 3), (*pIt)->GetPosition()));
-                            }
-                        }
+            		cometVec.push_back(new Comet(iCollide, 300.0f, 300.0f, 
+                        static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
+                        (rand() % 3 + 5), levelNum + (rand() % 1 + 3), mainPlayer.GetPosition()));
             			break;
                 case SDLK_m:
                     callAnnouncement = true;
                     break;
                 case SDLK_s:
-                	if (playerVec.empty()) {
-                        playerVec.push_back(new Player(iCollide, 400, 300, 25, 25));
-                    }
+                    mainPlayer = Player(iCollide, 320, 240, 25, 25);
                     break;
                 case SDLK_t:
-                	if (!playerVec.empty()) {
-                        for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-                            cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
-                                static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
-                                (rand() % 3 + 5), levelNum + (rand() % 1 + 3), (*pIt)->GetPosition()));
-                        }
-                    }
+                    cometVec.push_back(new Comet(iCollide, -20.0f, -10.0f, 
+                        static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), 
+                        (rand() % 3 + 5), levelNum + (rand() % 1 + 3), mainPlayer.GetPosition()));
         			break;
            }
 		}
 	}
-	if (!playerVec.empty()) {
-        for (pIt = playerVec.begin(); pIt != playerVec.end(); ++pIt) {
-        	(*pIt)->Handle_Events();
-        }
-    }
+	mainPlayer.Handle_Events();
 }
 
 void Level::Logic() {
-
-	if (!playerVec.empty()) {
-        for (pIt = playerVec.begin(); pIt != playerVec.end();) {
-            if ((*pIt)->GetAlive()) {
-        		(*pIt)->Logic();
-                if (SDL_GetTicks() > cometSpawn) {
-                    cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
-					    randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
-					static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
-					static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
-					(*pIt)->GetPosition()));
-                    cometSpawn = SDL_GetTicks() + 2000;
-                }
-                ++pIt;
-    		} else {
-			if (SDL_GetTicks() > playerRespawn) {
-				if (playerLives != 0) {
-				    playerLives--;
-				    playerVec.push_back(new Player(iCollide, 320, 240, 25, 25));
-				    playerRespawn = SDL_GetTicks() + 2000;
-				} else {
-				    Set_State(StateManager::Child_Exit);
-				}
-			} else {
-
-				delete *pIt;
-				pIt = playerVec.erase(pIt);
-				if (pIt != playerVec.end()) {
-				    ++pIt;
-				}
-			}
-            /*} else {
-                delete *pIt;
-                pIt = playerVec.erase(pIt);
-                if (pIt != playerVec.end()) {
-                    ++pIt;
-                }*/
+    if (mainPlayer.GetAlive()) {
+		mainPlayer.Logic();
+        if (SDL_GetTicks() > cometSpawn) {
+            cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
+                randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
+                static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
+                static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
+                mainPlayer.GetPosition()));
+            cometSpawn = SDL_GetTicks() + 2000;
+        }
+    } else {
+        if (SDL_GetTicks() > playerRespawn) {
+            if (playerLives <= 0) {
+                playerLives--;
+                mainPlayer = Player(iCollide, 320, 240, 25, 25);
+                playerRespawn = SDL_GetTicks() + 5000;
+            } else {
+                Set_State(StateManager::Child_Exit);
             }
         }
-	}
+    }
 	if (!cometVec.empty()) {
         for (cIt = cometVec.begin(); cIt != cometVec.end();) {
             if ((*cIt)->GetAlive()) {
@@ -214,14 +172,14 @@ void Level::Tutorial() {
                                 "You get bombs to play with as well\n"
                                 "If you run out of lives...well I think you know\n"
                                 "Have fun!\n";
-    /*hud->Status(tutText.c_str() ,"FreeSans", (*pIt)->GetPosition().x()-40, 
-        (*pIt)->GetPosition().y()-40, 13, 3);*/
+    /*hud->Status(tutText.c_str() ,"FreeSans", (*mainPlayer.GetPosition().x()-40, 
+        (*mainPlayer.GetPosition().y()-40, 13, 3);*/
     //finishTutorial = true;
 }
 
 /*void Level::CometScore() {
-    hud->Status(itos(,"FreeSans", (*pIt)->GetPosition().x()-40, 
-        (*pIt)->GetPosition().y()-40, 13, 3);
+    hud->Status(itos(,"FreeSans", (*mainPlayer.GetPosition().x()-40, 
+        (*mainPlayer.GetPosition().y()-40, 13, 3);
   */  
 
 float Level::randOutside(float _first, float _second, float _distance) {
