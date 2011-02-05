@@ -14,10 +14,10 @@ HUD::~HUD() {
     delete pMeter;
 }
 
-void HUD::Simple(const int& _s, const float _x, const float _y) {
+void HUD::Simple(const int& _s, const int _size, const float _x, const float _y) {
 glPushMatrix();
     glColor4f(1, 1, 1, .4);
-    fe->Draw(itos(_s).c_str(), 12, "04b_11", _x, _y);
+    fe->Draw(itos(_s).c_str(), _size, "04b_11", _x, _y);
 glPopMatrix();
 }
 

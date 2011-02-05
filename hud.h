@@ -25,7 +25,7 @@ public:
     HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount);
     ~HUD();
     void Thrust(const float _x, const float _y, const float _t, const float scale);
-    void Simple(const int& _s, const float _x, const float _y);
+    void Simple(const int& _s, const int _size, const float _x, const float _y);
     void Amount(int& _a);
     void Announcement(const std::string _m, const std::string _f, float _x, float _y, int& _isize);
     void Status(const std::string& _m, const std::string _f, float _x, float _y, int _size, int _time);

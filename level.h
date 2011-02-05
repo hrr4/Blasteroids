@@ -20,19 +20,19 @@ public:
     virtual void Handle_Events();
 private:
     void Tutorial();
-    void ScoreDraw(int& score);
+    void ScoreIncrease();
     float randOutside(float _first, float _second, float _distance);
 private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
-    Player mainPlayer;
+    Player* mainPlayer;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
 	std::vector<Collider*>::iterator it;
 	std::vector<Comet*>::iterator cIt;
     int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
-    bool callAnnouncement, callCometScore; 
+    bool callAnnouncement; 
     static bool finishTutorial;
     static int playerLives, score;
 };
