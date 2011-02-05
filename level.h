@@ -34,7 +34,7 @@ private:
     int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
     bool callAnnouncement; 
     static bool finishTutorial;
-    static int playerLives, score/*, playerRespawn*/;
+    static int playerLives, score;
 };
 
 #endif

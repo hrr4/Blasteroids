@@ -13,6 +13,7 @@
 #include <SDL_opengl.h>
 #include <random>
 #include <time.h>
+#include "ISound.h"
 
 class App {
 public:
@@ -28,6 +29,7 @@ private:
 	IGameScreen* activeScreen;
 	StateManager manager;
 	FPS delta;
+    ISound soundEngine;
 	bool isRunning; 
     int levelNum, totalLevels;
     unsigned long int next_tick;

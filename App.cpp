@@ -4,13 +4,17 @@ App::App() : totalLevels(50) {
 	srand(time(0));
     winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
 	activeScreen = new Title();
+    levelNum = 1;
+    // Init Subsystems
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
     initGL();
-    levelNum = 1;}
+    soundEngine = ISound();
+}
 
 App::~App() {
-	delete winmain, activeScreen;
+	delete winmain;
+    delete activeScreen;
 }
 
 void App::Loop() {
@@ -25,6 +29,7 @@ void App::Loop() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		activeScreen->Draw();
 		SDL_GL_SwapBuffers();
+        soundEngine.frameUpdate();
 		Query_GameScreen();
 	}
 }
