@@ -4,14 +4,16 @@ bool Level::finishTutorial = false;
 int Level::playerLives = 3;
 int Level::score = 0;
 
-Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90), levelNum(_levelNum), 
-    stars(Starfield()), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000), playerRespawn(SDL_GetTicks()+2000) {
-    mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-    untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
-    if (levelNum == 1) {
-        Level::playerLives = 3;
-        Level::score = 0;
-    }
+Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90), 
+	levelNum(_levelNum), stars(Starfield()), iCollide(new ICollide()), 
+	hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000), 
+	playerRespawn(SDL_GetTicks()+5000) {
+	mainPlayer = new Player(iCollide, 320, 240, 25, 25);
+	untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
+	if (levelNum == 1) {
+		Level::playerLives = 3;
+		Level::score = 0;
+	}
 }
 
 Level::~Level() {
@@ -22,11 +24,13 @@ Level::~Level() {
     delete hud;
 }
 
-void Level::Draw() {    mainPlayer->Draw();
-    hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
-    if (levelNum == 0 && !finishTutorial) {
-        Tutorial();
-    }    /*if ((untilNext - kills) <= 10) {
+void Level::Draw() {    
+	mainPlayer->Draw();
+	hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
+	if (levelNum == 0 && !finishTutorial) {
+		Tutorial();
+	}
+    /*if ((untilNext - kills) <= 10) {
         std::string remaining = itos(untilNext-kills)+" Remaining";
         hud->Status(remaining ,"FreeSans", mainPlayer->GetPosition().x()-40, 
             (*mainPlayer->GetPosition().y()-40, 13, 3);
@@ -69,19 +73,19 @@ void Level::Handle_Events() {
 			Set_State(StateManager::Child_Quit);
 		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
 		    switch (Event::Get_Event()->key.keysym.sym) {
-                case SDLK_ESCAPE : 
-                    Set_State(StateManager::Child_Exit);
-                    break;
-            	case SDLK_SPACE:
-            		if (mainPlayer->CanShoot()) {
-            			projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
-                            mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), 
-            				mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()),
-            				mainPlayer->GetAngle()));
-            			mainPlayer->Shoot();
-            		}
-        			break;
-           }
+			case SDLK_ESCAPE : 
+			    Set_State(StateManager::Child_Exit);
+			    break;
+			case SDLK_SPACE:
+				if (mainPlayer->CanShoot()) {
+					projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
+					    mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), 
+						mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()),
+						mainPlayer->GetAngle()));
+					mainPlayer->Shoot();
+				}
+				break;
+		   }
 		}
 	}
 	mainPlayer->Handle_Events();
@@ -89,23 +93,23 @@ void Level::Handle_Events() {
 
 void Level::Logic() {
     if (mainPlayer->GetAlive()) {
-		mainPlayer->Logic();
+	mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
             cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
                 randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
                 static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
                 static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
                 mainPlayer->GetPosition()));
-            cometSpawn = SDL_GetTicks() + 2000;
+		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
         cometVec.clear();
-        playerLives--;
         if (SDL_GetTicks() > playerRespawn) {
             if (playerLives > 0) {
+		playerLives--;
                 delete mainPlayer;
                 mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-                playerRespawn = SDL_GetTicks() + 5000;
+		playerRespawn = SDL_GetTicks() + 5000;
             } else {
                 Set_State(StateManager::Child_Exit);
             }
