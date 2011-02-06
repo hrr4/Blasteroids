@@ -2,6 +2,7 @@
 #define IPARTICLE_H
 
 #include "Particle.h"
+#include <map>
 
 /* ####### PARTICLE ENGINE MANIFESTO #######
     *** GOALS ***
@@ -21,9 +22,15 @@ public:
 public:
     IParticle();
     ~IParticle();
+    void Logic();
 
     // Drawing Functions
     void DrawExplosion(formationType _formation, float _intensity, float _fade, float _x, float _y, particleType _type=particleType::pPoint);
+
+private:
+    static int totalID;
+    std::map<int id, Particle* _particle> particleMap;
+    
 };
 
 #endif
