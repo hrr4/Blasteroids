@@ -2,15 +2,13 @@
 #define PARTICLE_H
 
 #include <SDL_opengl.h>
+#include "vector.h"
+
+enum ParticleType {Create, Update};
 
 struct Particle {
-    enum drawType {pPoint, pCircle, pSquare, pTriangle};
-
-    Particle(drawType _myType, int _size);
-    ~Particle();
-
-private:
-    drawType p_myType;
+    Vectorf pos, vel;
+    int age, lifeSpan, color, size;
 };
 
 #endif
