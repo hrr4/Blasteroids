@@ -83,6 +83,8 @@ void Level::Handle_Events() {
 						mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()),
 						mainPlayer->GetAngle()));
 					mainPlayer->Shoot();
+                    //soundEngine.PlaySFX("photon");
+                    //soundEngine.PlaySFX("sound\photon.ogg");
 				}
 				break;
 		   }
@@ -93,7 +95,7 @@ void Level::Handle_Events() {
 
 void Level::Logic() {
     if (mainPlayer->GetAlive()) {
-	mainPlayer->Logic();
+    	mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
             cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
                 randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
@@ -106,10 +108,10 @@ void Level::Logic() {
         cometVec.clear();
         if (SDL_GetTicks() > playerRespawn) {
             if (playerLives > 0) {
-		playerLives--;
+        		playerLives--;
                 delete mainPlayer;
                 mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-		playerRespawn = SDL_GetTicks() + 5000;
+        		playerRespawn = SDL_GetTicks() + 5000;
             } else {
                 Set_State(StateManager::Child_Exit);
             }

@@ -10,6 +10,7 @@
 #include "hud.h"
 #include <string>
 #include <vector>
+#include "ISound.h"
 
 class Level : public IGameScreen {
 public:
@@ -26,6 +27,7 @@ private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
+    //ISound soundEngine;
     Player* mainPlayer;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
