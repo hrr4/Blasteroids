@@ -83,8 +83,8 @@ void Level::Handle_Events() {
 						mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()),
 						mainPlayer->GetAngle()));
 					mainPlayer->Shoot();
-                    //soundEngine.PlaySFX("photon");
-                    //soundEngine.PlaySFX("sound\photon.ogg");
+                    soundEngine.PlaySFX("photon");
+                    //soundEngine.PlaySFX("sound/photon.ogg");
 				}
 				break;
 		   }

@@ -27,7 +27,7 @@ private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
-    //ISound soundEngine;
+    ISound soundEngine;
     Player* mainPlayer;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 

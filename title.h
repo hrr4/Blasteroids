@@ -19,6 +19,7 @@ public:
     virtual void Logic();
     virtual void Draw();
     virtual void Handle_Events();
+
 private:
     void DrawMain();
     void DrawScores();
@@ -28,6 +29,6 @@ private:
     Comet* comets;
     Screen active;
     int selectorX, selectorY;
-    //ISound soundEngine;
+    ISound soundEngine;
 };
 #endif

@@ -11,8 +11,8 @@ public:
     ~ISound();
     bool LoadSFX(const std::string& _filename, const std::string _shortName=NULL);
     bool LoadMusic(const std::string& _filename, const std::string _shortName=NULL);
-    void PlaySFX(const std::string _fileName);
-    //void PlaySFX(const std::string _shortName);
+    //void PlaySFX(const std::string _fileName);
+    void PlaySFX(const std::string _shortName);
     void PlayMusic(const std::string& _filename);
     void PlayMusic(const std::string _shortName);
     void frameUpdate();
