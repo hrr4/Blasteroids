@@ -1,6 +1,6 @@
 #include "App.h"
 
-App::App() : totalLevels(50) {
+App::App() : totalLevels(50), soundEngine(ISound::getInstance()) {
 	srand(time(0));
     winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
 	activeScreen = new Title();
@@ -9,7 +9,6 @@ App::App() : totalLevels(50) {
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
     initGL();
-    soundEngine = ISound::getInstance();
 }
 
 App::~App() {

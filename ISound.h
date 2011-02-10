@@ -21,7 +21,6 @@ public:
 
 private:
     ISound();
-
     // Singleton instantiation
     static ISound* Instance;
 
@@ -29,8 +28,8 @@ private:
     FMOD::System *system;
     FMOD::Sound *tempSound;
     FMOD::Channel *channel;
-    std::map<std::string, FMOD::Sound&> soundMap;
-    std::map<std::string, FMOD::Sound&>::iterator sIt;
+    std::map<std::string, FMOD::Sound> soundMap;
+    std::map<std::string, FMOD::Sound>::iterator sIt;
 };
 
 #endif
