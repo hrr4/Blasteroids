@@ -1,14 +1,20 @@
 #include "ISound.h"
 
-ISound* ISound::Instance = 0;
+ISound* ISound::Instance = NULL;
 
 ISound::ISound() {
-    ISound::Instance = this;
-
     if ((result = FMOD::System_Create(&system)) != FMOD_OK) {
         // You're fucked O_O
     }
     result = system->init(100, FMOD_INIT_NORMAL, 0);
+}
+
+ISound* ISound::getInstance() {
+    if (Instance == NULL) {
+        //ISound();
+        Instance = new ISound();
+    }
+    return(Instance);
 }
 
 ISound::~ISound() {result = system->release();}

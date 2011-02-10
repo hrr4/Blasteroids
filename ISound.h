@@ -5,9 +5,11 @@
 #include <string>
 #include <map>
 
+// SINGLETON
+
 class ISound {
 public:
-    ISound();
+    static ISound& getInstance();
     ~ISound();
     bool LoadSFX(const std::string& _filename, const std::string _shortName=NULL);
     bool LoadMusic(const std::string& _filename, const std::string _shortName=NULL);
@@ -17,10 +19,12 @@ public:
     void PlayMusic(const std::string _shortName);
     void frameUpdate();
 
-    // Quasi-Singleton instantiation
+private:
+    ISound();
+
+    // Singleton instantiation
     static ISound* Instance;
 
-private:
     FMOD_RESULT result;
     FMOD::System *system;
     FMOD::Sound *tempSound;

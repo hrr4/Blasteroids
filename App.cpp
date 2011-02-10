@@ -9,7 +9,7 @@ App::App() : totalLevels(50) {
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
     initGL();
-    soundEngine = ISound();
+    soundEngine = ISound::getInstance();
 }
 
 App::~App() {

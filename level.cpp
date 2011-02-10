@@ -7,7 +7,7 @@ int Level::score = 0;
 Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90), 
 	levelNum(_levelNum), stars(Starfield()), iCollide(new ICollide()), 
 	hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000), 
-	playerRespawn(SDL_GetTicks()+5000) {
+    playerRespawn(SDL_GetTicks()+5000), soundEngine(ISound::getInstance()) {
 	mainPlayer = new Player(iCollide, 320, 240, 25, 25);
 	untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
 	if (levelNum == 1) {

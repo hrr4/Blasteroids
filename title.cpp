@@ -1,14 +1,14 @@
 #include "title.h"
 
 Title::Title() : selectorX(Window::Get_Surf()->w-105), /*selectorY(Window::Get_Surf()->h-45)*/ selectorY(Window::Get_Surf()->h-15),
-    stars(Starfield()), active(Main) {
+    stars(Starfield()), active(Main), soundEngine(ISound::getInstance()) {
         // Cache Sounds
         soundEngine.LoadSFX("sound/photon.ogg", "photon");
         soundEngine.LoadSFX("sound/photon.ogg", "test");
 }
 
 Title::Title(Screen forceScreen) : selectorX(Window::Get_Surf()->w-105), /*selectorY(Window::Get_Surf()->h-45)*/ selectorY(Window::Get_Surf()->h-15),
-    stars(Starfield()), active(forceScreen) {
+    stars(Starfield()), active(forceScreen), soundEngine(ISound::getInstance()) {
         // Cache Sounds
         soundEngine.LoadSFX("sound/photon.ogg", "photon");
 }
