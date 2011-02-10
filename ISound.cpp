@@ -22,7 +22,9 @@ bool ISound::LoadSFX(const std::string& _filename, const std::string _shortName)
     } else {
         text = _filename.substr((_filename.find_last_of("\\") || _filename.find_last_of("/")), _filename.find_last_of("."));
     }
-    soundMap.insert(std::make_pair(text, system->createSound(_filename.c_str(), FMOD_2D | FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tempSound)));
+    result = system->createSound(_filename.c_str(), FMOD_2D | FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tempSound);
+    soundMap.insert(std::make_pair(text, *tempSound));
+    tempSound = 0;
     return true;
 }
 
