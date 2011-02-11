@@ -21,11 +21,9 @@ void App::Loop() {
             next_tick = SDL_GetTicks() + 10;
     		activeScreen->Handle_Events();
     		activeScreen->Logic();
-        }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		activeScreen->Draw();
-		SDL_GL_SwapBuffers();
-		Query_GameScreen();
+        }        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        activeScreen->Draw();
+        updateSubSystems();
 	}
 }
 
@@ -91,3 +89,8 @@ bool App::initGL() {
 		return false;
 	return true;
 }
+
+void App::updateSubSystems() {
+    SDL_GL_SwapBuffers();
+    Query_GameScreen();
+} 

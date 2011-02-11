@@ -14,6 +14,7 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90)
 		Level::playerLives = 3;
 		Level::score = 0;
 	}
+    particleEngine.createParticleSet(formationType::radialOut, 100, 100, .9, 1.5);
 }
 
 Level::~Level() {
@@ -26,6 +27,7 @@ Level::~Level() {
 
 void Level::Draw() {    
 	mainPlayer->Draw();
+    particleEngine.drawParticleSet();
 	hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
 	if (levelNum == 0 && !finishTutorial) {
 		Tutorial();
@@ -92,6 +94,7 @@ void Level::Handle_Events() {
 }
 
 void Level::Logic() {
+    particleEngine.updateParticleSet();
     if (mainPlayer->GetAlive()) {
 	mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
@@ -100,16 +103,16 @@ void Level::Logic() {
                 static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
                 static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
                 mainPlayer->GetPosition()));
-		cometSpawn = SDL_GetTicks() + 2000;
+    		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
         cometVec.clear();
         if (SDL_GetTicks() > playerRespawn) {
             if (playerLives > 0) {
-		playerLives--;
+        		playerLives--;
                 delete mainPlayer;
                 mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-		playerRespawn = SDL_GetTicks() + 5000;
+        		playerRespawn = SDL_GetTicks() + 5000;
             } else {
                 Set_State(StateManager::Child_Exit);
             }

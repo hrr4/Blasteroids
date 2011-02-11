@@ -2,7 +2,10 @@
 #define IPARTICLE_H
 
 #include "Particle.h"
+#include "Utility.h"
+#include <math.h>
 #include <map>
+#include "vector.h"
 
 /* ####### PARTICLE ENGINE MANIFESTO #######
     *** GOALS ***
@@ -27,13 +30,18 @@ public:
     ~IParticle();
     void Logic();
 
-    // Drawing Functions
-    void DrawExplosion(formationType _formation, float _intensity, float _fade, float _x, float _y, particleType _type=particleType::Create);
+    void createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time);
+    void updateParticleSet();
+    //void updateParticleSet(int _id);
+    //void drawParticleSet(int _id);
+    void drawParticleSet();
 
 private:
+    Vectorf tempPosition;
     static int totalID;
-    std::map<int, Particle*> particleMap;
-    std::map<int, Particle*>::iterator pIt;
+    std::multimap<int, Particle*> particleMap;
+    std::multimap<int, Particle*>::iterator pIt;
+    //std::pair<multimap<int, Particle*>::iterator, multimap<int, Particle*>::iterator> test;
 };
 
 #endif

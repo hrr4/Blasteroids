@@ -8,6 +8,7 @@
 #include "starfield.h"
 #include "icollide.h"
 #include "hud.h"
+#include "IParticle.h"
 #include <string>
 #include <vector>
 
@@ -27,6 +28,7 @@ private:
     ICollide* iCollide;
     HUD* hud;
     Player* mainPlayer;
+    IParticle particleEngine; // JUST FOR TESTING PURPOSES, THIS MIGHT NEED TO BE A SINGLETON LATER
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
 	std::vector<Collider*>::iterator it;

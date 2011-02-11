@@ -24,6 +24,7 @@ private:
 	bool initGL();
 	void Query_GameScreen();
 	void Set_GameScreen(StateManager::Global currentGlobal);
+    void updateSubSystems();
     Window* winmain;
 	IGameScreen* activeScreen;
 	StateManager manager;
