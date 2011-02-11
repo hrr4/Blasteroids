@@ -29,7 +29,7 @@ bool ISound::LoadSFX(const std::string& _filename, const std::string _shortName)
     }
     result = system->createSound(_filename.c_str(), FMOD_2D | FMOD_LOOP_OFF | FMOD_CREATESAMPLE, 0, &tempSound);
     Instance->soundMap.insert(std::make_pair(text, *tempSound));
-    //tempSound = 0;
+    tempSound = 0;
     return true;
 }
 
@@ -37,7 +37,7 @@ void ISound::PlaySFX(const std::string _shortName) {
     for (sIt = soundMap.begin(); sIt != soundMap.end(); ++sIt) {
         if (sIt->first == _shortName) {
             // BUG: Current problem is here, ERR_INVALID_HANDLE is most likely a channel issue
-            result = system->playSound(FMOD_CHANNEL_FREE, &sIt->second, false, 0);
+            result = system->playSound(FMOD_CHANNEL_FREE, &sIt->second, false, &Instance->channel);
         }
     }
 }
