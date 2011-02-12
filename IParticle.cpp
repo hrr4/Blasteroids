@@ -42,6 +42,11 @@ void IParticle::updateParticleSet() {
         if (!pIt->second->age <= 0) {
             // Here we update velocity? and we should probably add that to the position.....? something
             //pIt->second->pos.x() 
+            pIt->second->vel.x() = 2;
+            pIt->second->vel.y() = 2;
+            pIt->second->pos.x() += pIt->second->vel.x();
+            pIt->second->pos.y() += pIt->second->vel.y();
+
             pIt->second->age -= 0.0001;
         } else {
             // Erase = destroying iterator.... could be a problem yes? lol
