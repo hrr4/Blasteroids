@@ -41,7 +41,6 @@ private:
     static int totalID;
     std::multimap<int, Particle*> particleMap;
     std::multimap<int, Particle*>::iterator pIt;
-    //std::pair<multimap<int, Particle*>::iterator, multimap<int, Particle*>::iterator> test;
 };
 
 #endif

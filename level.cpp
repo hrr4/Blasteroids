@@ -14,7 +14,7 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90)
 		Level::playerLives = 3;
 		Level::score = 0;
 	}
-    particleEngine.createParticleSet(formationType::radialOut, 300, 300, .9, 1.5);
+    particleEngine.createParticleSet(formationType::radialOut, 300, 300, .5, 1.5);
 }
 
 Level::~Level() {
