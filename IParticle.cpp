@@ -8,15 +8,18 @@ IParticle::IParticle() {
 IParticle::~IParticle() {}
 
 void IParticle::createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time) {
+  int testTimes = (rand() % 5), test= 0;
     switch(_type) {
     case radialOut:
-        for (float angle = 2.0f; angle < 2 * Utility::PI; angle+=_intensity) {
-            float tempAngle = (angle * Utility::DEGTORAD);
-            tempPosition.x() = sinf(tempAngle) + _x;
-            tempPosition.y() = cosf(tempAngle) + _y;
+      while (test < testTimes) {
+        for (float angle = 0.1f; angle < 2 * Utility::PI; angle+=_intensity) {
+            tempPosition.x() = ((rand() % 10) + sinf(angle)) + _x;
+            tempPosition.y() = ((rand() % 10) + cosf(angle)) + _y;
             particleMap.insert(std::make_pair(totalID, new Particle(ParticleType::Create, 
-                tempPosition, 10, tempAngle)));
+                tempPosition, (rand() % 10), angle)));
         }
+        ++test;
+      }
     }
     ++totalID;
 }
@@ -38,22 +41,25 @@ void IParticle::createParticleSet(formationType _type, float _x, float _y, float
 }*/
 
 void IParticle::updateParticleSet() {
-    for (pIt = particleMap.begin(); pIt != particleMap.end(); ++pIt) {
+    for (pIt = particleMap.begin(); pIt != particleMap.end();) {
         if (!pIt->second->age <= 0) {
             float heading, speed = 2;
             pIt->second->vel.x() = speed * sinf(pIt->second->angle);
             pIt->second->vel.y() = speed * cosf(pIt->second->angle);
-        	if (pIt->second->vel.y() >= 0)
-        		heading = atanf(pIt->second->vel.x()/pIt->second->vel.y());
-        	else 
-        		heading = atanf(pIt->second->vel.x()/pIt->second->vel.y())+Utility::PI;
+            if (pIt->second->vel.y() >= 0)
+            		heading = atanf(pIt->second->vel.x()/pIt->second->vel.y());
+            else 
+            		heading = atanf(pIt->second->vel.x()/pIt->second->vel.y())+Utility::PI;
             pIt->second->pos.x() += speed * sinf(heading);
-            pIt->second->pos.y() -= speed * cosf(heading);
+            pIt->second->pos.y() += speed * cosf(heading);
 
-            pIt->second->age -= 0.01;
+            pIt->second->age -= 0.1;
+            ++pIt;
         } else {
-            // Erase = destroying iterator.... could be a problem yes? lol
-           // particleMap.erase(pIt);
+            pIt = particleMap.erase(pIt);
+            if (pIt != particleMap.end()) {
+                ++pIt;
+            }
         }
     }
 }

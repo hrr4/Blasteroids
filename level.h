@@ -23,20 +23,20 @@ private:
     void Tutorial();
     void ScoreIncrease();
     float randOutside(float _first, float _second, float _distance);
+    void createCometChild(Vectorf _parentVec, int _n);
 private:
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
     Player* mainPlayer;
-    IParticle particleEngine; // JUST FOR TESTING PURPOSES, THIS MIGHT NEED TO BE A SINGLETON LATER
+    IParticle particleEngine;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
-	std::vector<Collider*>::iterator it;
-	std::vector<Comet*>::iterator cIt;
-    int untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
+    std::vector<Collider*>::iterator it;
+    std::vector<Comet*>::iterator cIt;    int numPoints, untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
     bool callAnnouncement; 
     static bool finishTutorial;
-    static int playerLives, score/*, playerRespawn*/;
+    static int playerLives, score;
 };
 
 #endif

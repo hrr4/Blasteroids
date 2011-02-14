@@ -14,7 +14,6 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90)
 		Level::playerLives = 3;
 		Level::score = 0;
 	}
-    particleEngine.createParticleSet(formationType::radialOut, 300, 300, .5, 1.5);
 }
 
 Level::~Level() {
@@ -27,7 +26,7 @@ Level::~Level() {
 
 void Level::Draw() {    
 	mainPlayer->Draw();
-    particleEngine.drawParticleSet();
+  particleEngine.drawParticleSet();
 	hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
 	if (levelNum == 0 && !finishTutorial) {
 		Tutorial();
@@ -96,7 +95,7 @@ void Level::Handle_Events() {
 void Level::Logic() {
     particleEngine.updateParticleSet();
     if (mainPlayer->GetAlive()) {
-	mainPlayer->Logic();
+        mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
             cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
                 randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
@@ -109,10 +108,12 @@ void Level::Logic() {
         cometVec.clear();
         if (SDL_GetTicks() > playerRespawn) {
             if (playerLives > 0) {
-        		playerLives--;
+            		playerLives--;
+                particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), 
+                  mainPlayer->GetPosition().y(), .5, 1.5);
                 delete mainPlayer;
                 mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-        		playerRespawn = SDL_GetTicks() + 5000;
+            		playerRespawn = SDL_GetTicks() + 5000;
             } else {
                 Set_State(StateManager::Child_Exit);
             }
@@ -128,17 +129,27 @@ void Level::Logic() {
                         (*cIt)->SetWrap(true);
                 }
                 ++cIt;
-    		} else {
+        		} else {                particleEngine.createParticleSet(formationType::radialOut, (*cIt)->GetPosition().x(), 
+                  (*cIt)->GetPosition().y(), .5, 1.5);
+
+                Vectorf test = (*cIt)->GetPosition();
+                numPoints = (*cIt)->GetPoints();
+
                 delete *cIt;
                 ++kills;
                 ScoreIncrease();
                 cIt = cometVec.erase(cIt);
+                if (numPoints > 3) {
+                  createCometChild(test, --numPoints);
+                }
+
                 if (cIt != cometVec.end()) {
                     ++cIt;
                 }
             }
         }
 	}
+
 	if (!projVec.empty()) {
         for (it = projVec.begin(); it != projVec.end();) {
             if ((*it)->GetAlive() && 
@@ -147,7 +158,7 @@ void Level::Logic() {
         		(*it)->Logic();
                 ++it;
 			} else {
-                delete *it;
+               delete *it;
                 it = projVec.erase(it);
                 if (it != projVec.end()) {
                     ++it;
@@ -192,4 +203,14 @@ float Level::randOutside(float _first, float _second, float _distance) {
 void Level::ScoreIncrease() {
     cometScore = (rand() % 20);
     Level::score += cometScore;
+}
+
+void Level::createCometChild(Vectorf _parentVec, int _n) {
+  int bleep = (rand() % 3);
+    for (int i = 0; i < bleep; ++i) {
+        cometVec.push_back(new Comet(iCollide, _parentVec.x(), _parentVec.y(), 
+            static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), numPoints,  
+            static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
+            mainPlayer->GetPosition()));
+    }
 }

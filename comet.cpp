@@ -1,13 +1,13 @@
 #include "comet.h"
 
 Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float _vel, Vectorf _vec, int _r, int _g, int _b, int _a) :
-        inBounds(false) {
+        inBounds(false), r(_r), g(_g), b(_b), n(_n) {
 	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
-	r = _r, g = _g, b = _b, a = _a, n = _n;
+	a = _a;
 	Position.z() = angle = 0;
-    speed = _vel;
+  speed = _vel;
 	radius = (_h/2) + ((_w*_w)/(8*_h));
-    centerx = Position.x()+r_Rect.w/2;
+  centerx = Position.x()+r_Rect.w/2;
 	centery = Position.y()+r_Rect.h/2;
 
 	layer = 2;
@@ -19,8 +19,8 @@ Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float 
 	isAlive = true;
 	isPassable = false;
 
-    Randomize_Points(_w, _h, _n);
-    _collide = c;
+  Randomize_Points(_w, _h, _n);
+  _collide = c;
 	_collide->Attach(this);
 
 }
@@ -103,4 +103,8 @@ void Comet::Update(Subject* ChangedSubject) {
 
 void Comet::SetWrap(const bool isWrap) {
     inBounds = isWrap;
+}
+
+int Comet::GetPoints() {
+  return n;
 }
