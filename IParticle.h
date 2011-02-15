@@ -27,7 +27,6 @@ public:
     IParticle();
     ~IParticle();
     void Logic();
-
     void createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time);
     void updateParticleSet();
     void drawParticleSet();

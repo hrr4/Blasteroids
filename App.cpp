@@ -19,8 +19,8 @@ void App::Loop() {
 		//delta.Start();
         if (SDL_GetTicks() > next_tick ) {
             next_tick = SDL_GetTicks() + 10;
-    		activeScreen->Handle_Events();
-    		activeScreen->Logic();
+        		activeScreen->Handle_Events();
+        		activeScreen->Logic();
         }        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         activeScreen->Draw();
         updateSubSystems();

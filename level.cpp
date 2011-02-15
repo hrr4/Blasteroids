@@ -1,6 +1,5 @@
 #include "level.h"
 
-bool Level::finishTutorial = false;
 int Level::playerLives = 3;
 int Level::score = 0;
 

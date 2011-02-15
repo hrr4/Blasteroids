@@ -39,9 +39,9 @@ void Comet::Draw() {
 void Comet::Logic() {
     if (CheckCollision())
         isAlive = false;
-	angle += speed*1.5;
-	Position.x() -= Direction.x()+Velocity.x();
-	Position.y() -= Direction.y()+Velocity.y();
+    angle += speed*1.5;
+    Position.x() -= Direction.x()+Velocity.x();
+    Position.y() -= Direction.y()+Velocity.y();
 
     if (inBounds) {
     	if (Position.x() < 0) {
@@ -93,18 +93,13 @@ glPushMatrix();
 glPopMatrix();
 }
 
-void Comet::Handle_Events() {}
-
 void Comet::Update(Subject* ChangedSubject) {
 	if (ChangedSubject != _collide) {
 		_collide = static_cast<ICollide*>(ChangedSubject);
 	}
 }
+void Comet::Handle_Events() {}
 
-void Comet::SetWrap(const bool isWrap) {
-    inBounds = isWrap;
-}
+void Comet::SetWrap(const bool isWrap) {inBounds = isWrap;}
 
-int Comet::GetPoints() {
-  return n;
-}
+int Comet::GetPoints() {return n;}

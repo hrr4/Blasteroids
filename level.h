@@ -23,7 +23,7 @@ private:
     void ScoreIncrease();
     float randOutside(float _first, float _second, float _distance);
     void createCometChild(Vectorf _parentVec, int _n);
-private:
+
     Starfield stars;
     ICollide* iCollide;
     HUD* hud;
@@ -33,7 +33,6 @@ private:
     std::vector<Comet*> cometVec; 
     int numPoints, untilNext, kills, announceSize, levelNum, cometScore, cometSpawn, playerRespawn;
     bool callAnnouncement; 
-    static bool finishTutorial;
     static int playerLives, score;
 };
 
