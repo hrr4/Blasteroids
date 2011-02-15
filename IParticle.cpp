@@ -14,20 +14,20 @@ void IParticle::createParticleSet(formationType _type, float _x, float _y, float
     case radialOut:
       while (test < testTimes) {
         for (float angle = 0.1f; angle < 2 * Utility::PI; angle+=_intensity) {
-		tempSpeed = Utility::UGen_Random(0.5, 1.5);
+        		tempSpeed = Utility::UGen_Random(0.5, 1.5);
 
             tempPosition.x() = ((rand() % 20) + sinf(angle)) + _x;
             tempPosition.y() = ((rand() % 20) + cosf(angle)) + _y;
 
-	    tempVelocity.x() = tempSpeed * sinf(angle);
-	    tempVelocity.y() = tempSpeed * cosf(angle);
+        	    tempVelocity.x() = tempSpeed * sinf(angle);
+        	    tempVelocity.y() = tempSpeed * cosf(angle);
 
             if (tempVelocity.y() >= 0)
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y());
             else 
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y())+Utility::PI;
             
-	    particleMap.insert(std::make_pair(totalID, new Particle(tempPosition, tempVelocity, _time*10, angle, tempHeading, tempSpeed)));
+            particleMap.insert(std::make_pair(totalID, new Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed)));
         }
         ++test;
       }

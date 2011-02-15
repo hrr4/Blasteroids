@@ -13,6 +13,7 @@ Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90)
 	if (levelNum == 1) {
 		Level::playerLives = 3;
 		Level::score = 0;
+    untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
 	}
 }
 
@@ -28,32 +29,15 @@ void Level::Draw() {
 	mainPlayer->Draw();
   particleEngine.drawParticleSet();
 	hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
-	if (levelNum == 0 && !finishTutorial) {
-		Tutorial();
-	}
-    /*if ((untilNext - kills) <= 10) {
-        std::string remaining = itos(untilNext-kills)+" Remaining";
-        hud->Status(remaining ,"FreeSans", mainPlayer->GetPosition().x()-40, 
-            (*mainPlayer->GetPosition().y()-40, 13, 3);
-    }*/    /*if (callCometScore) {
-        int interval = 10;
-        int timeout = SDL_GetTicks() + interval;
-        cometScore = (rand() % 20);
-        Level::score += cometScore;
-        //std::string wtf2 = ("+" + itos(cometScore));
-        hud->Status(wtf2.c_str(),"FreeSans", mainPlayer->GetPosition().x()-40, 
-            mainPlayer->GetPosition().y()-40, 13, 3);
-        callCometScore = false;
-    }*/
 	stars.Draw();
 	if (!cometVec.empty()) {
-        for (cIt = cometVec.begin(); cIt != cometVec.end(); ++cIt) {
-       		(*cIt)->Draw();
+        for (int i = 0; i < cometVec.size(); ++i) {
+       		cometVec[i]->Draw();
         }
 	}
 	if (!projVec.empty()) {
-        for (it = projVec.begin(); it != projVec.end(); ++it) {
-    		(*it)->Draw();
+        for (int i = 0; i < projVec.size(); ++i) {
+        		projVec[i]->Draw();
         }
 	}
     if (playerLives >= 0) {
@@ -119,76 +103,58 @@ void Level::Logic() {
         }
     }
 	if (!cometVec.empty()) {
-        for (cIt = cometVec.begin(); cIt != cometVec.end();) {
-            if ((*cIt)->GetAlive()) {
-        		(*cIt)->Logic();
+        for (int i = 0; i < cometVec.size();) {
+            if (cometVec[i]->GetAlive()) {
+            		cometVec[i]->Logic();
                 // Check bounds, set to wrap
-                if (((*cIt)->GetPosition().x() > 0 && (*cIt)->GetPosition().x() < Window::Get_Surf()->w) &&
-                    ((*cIt)->GetPosition().y() > 0 && (*cIt)->GetPosition().y() < Window::Get_Surf()->h)) {
-                        (*cIt)->SetWrap(true);
+                if ((cometVec[i]->GetPosition().x() > 0 && cometVec[i]->GetPosition().x() < Window::Get_Surf()->w) &&
+                    (cometVec[i]->GetPosition().y() > 0 && cometVec[i]->GetPosition().y() < Window::Get_Surf()->h)) {
+                        cometVec[i]->SetWrap(true);
                 }
-                ++cIt;
-        		} else {                particleEngine.createParticleSet(formationType::radialOut, (*cIt)->GetPosition().x(), 
-                  (*cIt)->GetPosition().y(), .5, 1.5);
+                ++i;
+        		} else {                particleEngine.createParticleSet(formationType::radialOut, cometVec[i]->GetPosition().x(), 
+                  cometVec[i]->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), Utility::UGen_Random(0.5, 2.0));
 
-                Vectorf test = (*cIt)->GetPosition();
-                numPoints = (*cIt)->GetPoints();
+                Vectorf test = cometVec[i]->GetPosition();
+                numPoints = cometVec[i]->GetPoints();
 
-                delete *cIt;
+                delete cometVec[i];
+                cometVec.erase(cometVec.begin() + i);
                 ++kills;
                 ScoreIncrease();
-                cIt = cometVec.erase(cIt);
-                if (numPoints > 3) {
-		  //                  createCometChild(test, --numPoints);
+                --numPoints;
+                if (numPoints > 3) {
+                  createCometChild(test, numPoints);
                 }
 
-                if (cIt != cometVec.end()) {
-                    ++cIt;
+                if (i != cometVec.size()) {
+                    ++i;
                 }
             }
         }
 	}
 
 	if (!projVec.empty()) {
-        for (it = projVec.begin(); it != projVec.end();) {
-            if ((*it)->GetAlive() && 
-                !((*it)->GetPosition().x() < -10 || (*it)->GetPosition().x() > Window::Get_Surf()->w+10 || 
-                    (*it)->GetPosition().y() < -10 || (*it)->GetPosition().y() > Window::Get_Surf()->h+10)) {
-        		(*it)->Logic();
-                ++it;
+        for (int i = 0; i < projVec.size();) {
+            if (projVec[i]->GetAlive() && 
+                !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || 
+                    projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
+        		projVec[i]->Logic();
+                ++i;
 			} else {
-               delete *it;
-                it = projVec.erase(it);
-                if (it != projVec.end()) {
-                    ++it;
+               delete projVec[i];
+               projVec.erase(projVec.begin() + i);
+                if (i != projVec.size()) {
+                    ++i;
                 }
             }
         }
     }
-
     // Switch Level
     if (kills == untilNext) {
         Set_State(StateManager::Child_Success);
     }
 }
-
-void Level::Tutorial() {
-    const std::string tutText = "Welcome to Blasteroids!\n"
-                                "Looks like it's your first time!\n"
-                                "It's pretty simple really.....\n"
-                                "Shoot Asteroids, get Points!\n"
-                                "You get bombs to play with as well\n"
-                                "If you run out of lives...well I think you know\n"
-                                "Have fun!\n";
-    /*hud->Status(tutText.c_str() ,"FreeSans", (*mainPlayer->GetPosition().x()-40, 
-        (*mainPlayer->GetPosition().y()-40, 13, 3);*/
-    //finishTutorial = true;
-}
-
-/*void Level::CometScore() {
-    hud->Status(itos(,"FreeSans", (*mainPlayer->GetPosition().x()-40, 
-        (*mainPlayer->GetPosition().y()-40, 13, 3);
-  */  
 
 float Level::randOutside(float _first, float _second, float _distance) {
     int test = Utility::UGen_Random(_first, _second);
@@ -205,11 +171,13 @@ void Level::ScoreIncrease() {
 }
 
 void Level::createCometChild(Vectorf _parentVec, int _n) {
+  Vectorf randNew;
   int bleep = (rand() % 3);
     for (int i = 0; i < bleep; ++i) {
+      randNew.set(Utility::UGen_Random(0.1, 360.0), Utility::UGen_Random(0.1, 360.0), 0);
         cometVec.push_back(new Comet(iCollide, _parentVec.x(), _parentVec.y(), 
             static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), numPoints,  
             static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
-            mainPlayer->GetPosition()));
+            randNew));
     }
 }

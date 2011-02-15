@@ -30,8 +30,6 @@ public:
 
     void createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time);
     void updateParticleSet();
-    //void updateParticleSet(int _id);
-    //void drawParticleSet(int _id);
     void drawParticleSet();
 
 private:
