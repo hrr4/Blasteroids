@@ -24,8 +24,6 @@ enum formationType {radialOut};
 
 class IParticle {
 public:
-    typedef ParticleType particleType;
-public:
     IParticle();
     ~IParticle();
     void Logic();

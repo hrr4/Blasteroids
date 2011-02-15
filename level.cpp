@@ -109,8 +109,7 @@ void Level::Logic() {
         if (SDL_GetTicks() > playerRespawn) {
             if (playerLives > 0) {
             		playerLives--;
-                particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), 
-                  mainPlayer->GetPosition().y(), .5, 1.5);
+                particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), (rand() % 1 + 10));
                 delete mainPlayer;
                 mainPlayer = new Player(iCollide, 320, 240, 25, 25);
             		playerRespawn = SDL_GetTicks() + 5000;
@@ -140,7 +139,7 @@ void Level::Logic() {
                 ScoreIncrease();
                 cIt = cometVec.erase(cIt);
                 if (numPoints > 3) {
-                  createCometChild(test, --numPoints);
+		  //                  createCometChild(test, --numPoints);
                 }
 
                 if (cIt != cometVec.end()) {
