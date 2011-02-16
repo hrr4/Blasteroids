@@ -11,5 +11,6 @@ struct Starfield {
 	virtual void Draw();
 private:
     std::vector<Star> starVec;
+    //std::vector<Star*> starVec;
 };
 #endif
