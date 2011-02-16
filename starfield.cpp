@@ -7,9 +7,7 @@ Starfield::Starfield() {
 	}
 }
 
-Starfield::~Starfield() {
-    starVec.clear();
-}
+Starfield::~Starfield() {starVec.clear();}
 
 void Starfield::Draw() {
     for (int i = 0; i < starVec.size(); ++i) {
