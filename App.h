@@ -24,14 +24,14 @@ private:
 	bool initGL();
 	void Query_GameScreen();
 	void Set_GameScreen(StateManager::Global currentGlobal);
-    void updateSubSystems();
-    Window* winmain;
+  void updateSubSystems();
+  Window* winmain;
 	IGameScreen* activeScreen;
 	StateManager manager;
 	FPS delta;
 	bool isRunning; 
-    int levelNum, totalLevels;
-    unsigned long int next_tick;
+  int levelNum, totalLevels;
+  unsigned long int next_tick;
 };
 
 #endif

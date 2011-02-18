@@ -1,7 +1,6 @@
 #include "comet.h"
 
-Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float _vel, Vectorf _vec, int _r, int _g, int _b, int _a) :
-        inBounds(false), r(_r), g(_g), b(_b), n(_n) {
+Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float _vel, Vectorf _vec, int _r, int _g, int _b, int _a) : inBounds(false), r(_r), g(_g), b(_b), n(_n) {
 	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
 	a = _a;
 	Position.z() = angle = 0;
@@ -39,7 +38,7 @@ void Comet::Draw() {
 void Comet::Logic() {
     if (CheckCollision())
         isAlive = false;
-    angle += speed*1.5;
+    angle += speed+0.5;
     Position.x() -= Direction.x()+Velocity.x();
     Position.y() -= Direction.y()+Velocity.y();
 
@@ -83,20 +82,18 @@ void Comet::Randomize_Points(int w, int h, int n) {
 void Comet::Render(int r, int g, int b, int a) {
 glPushMatrix();
 	glTranslatef(Position.x(), Position.y(), Position.z());
-	//glTranslatef(Position.x()+(r_Rect.w/2), Position.y()-(r_Rect.h/2), Position.z());
 	glRotatef(angle, 0, 0, 1);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vertVec[0]);
-    glColor4f(r, g, b, a);
+  glColor4f(r, g, b, a);
 	glDrawArrays(GL_LINE_LOOP, 0, n);
 	glFlush();
 glPopMatrix();
 }
 
 void Comet::Update(Subject* ChangedSubject) {
-	if (ChangedSubject != _collide) {
+	if (ChangedSubject != _collide) 
 		_collide = static_cast<ICollide*>(ChangedSubject);
-	}
 }
 void Comet::Handle_Events() {}
 

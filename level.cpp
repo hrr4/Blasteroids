@@ -3,11 +3,8 @@
 int Level::playerLives = 3;
 int Level::score = 0;
 
-Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90), 
-	levelNum(_levelNum), stars(Starfield()), iCollide(new ICollide()), 
-	hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000), 
-	playerRespawn(SDL_GetTicks()+5000) {
-	mainPlayer = new Player(iCollide, 320, 240, 25, 25);
+Level::Level(int _levelNum) : kills(0), callAnnouncement(true), announceSize(90), levelNum(_levelNum), stars(Starfield()), iCollide(new ICollide()), hud(new HUD(fe, true, true, true)), cometSpawn(SDL_GetTicks()+5000) { 
+  mainPlayer = new Player(iCollide, 320, 240, 25, 25);
 	untilNext = (levelNum + (rand() % 1 + 3))*(levelNum + (rand() % 1 + 3));
 	if (levelNum == 1) {
 		Level::playerLives = 3;
@@ -62,10 +59,7 @@ void Level::Handle_Events() {
 			    break;
 			case SDLK_SPACE:
 				if (mainPlayer->CanShoot()) {
-					projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide,
-					    mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), 
-						mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()),
-						mainPlayer->GetAngle()));
+					projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide, mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()), mainPlayer->GetAngle()));
 					mainPlayer->Shoot();
 				}
 				break;
@@ -80,25 +74,21 @@ void Level::Logic() {
     if (mainPlayer->GetAlive()) {
         mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
-            cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), 
-                randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), 
-                static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5),  
-                static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
-                mainPlayer->GetPosition()));
-    		cometSpawn = SDL_GetTicks() + 2000;
+            cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), mainPlayer->GetPosition()));
+        		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
-        cometVec.clear();
-        if (SDL_GetTicks() > playerRespawn) {
-            if (playerLives > 0) {
-            		playerLives--;
-                particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), (rand() % 1 + 10));
-                delete mainPlayer;
-                mainPlayer = new Player(iCollide, 320, 240, 25, 25);
-            		playerRespawn = SDL_GetTicks() + 5000;
-            } else {
-                Set_State(StateManager::Child_Exit);
-            }
+        for (int i = 0; i < cometVec.size();) {
+            delete cometVec[i];
+            cometVec.erase(cometVec.begin() + i);
+        }
+        if (playerLives > 0) {
+        		playerLives--;
+            particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), Utility::UGen_Random(0.5, 2.0));
+            delete mainPlayer;
+            mainPlayer = new Player(iCollide, 320, 240, 25, 25);
+        } else {
+            Set_State(StateManager::Child_Exit);
         }
     }
 	if (!cometVec.empty()) {
@@ -106,8 +96,7 @@ void Level::Logic() {
             if (cometVec[i]->GetAlive()) {
             		cometVec[i]->Logic();
                 // Check bounds, set to wrap
-                if ((cometVec[i]->GetPosition().x() > 0 && cometVec[i]->GetPosition().x() < Window::Get_Surf()->w) &&
-                    (cometVec[i]->GetPosition().y() > 0 && cometVec[i]->GetPosition().y() < Window::Get_Surf()->h)) {
+                if ((cometVec[i]->GetPosition().x() > 0 && cometVec[i]->GetPosition().x() < Window::Get_Surf()->w) && (cometVec[i]->GetPosition().y() > 0 && cometVec[i]->GetPosition().y() < Window::Get_Surf()->h)) {
                         cometVec[i]->SetWrap(true);
                 }
                 ++i;
@@ -136,8 +125,7 @@ void Level::Logic() {
 	if (!projVec.empty()) {
         for (int i = 0; i < projVec.size();) {
             if (projVec[i]->GetAlive() && 
-                !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || 
-                    projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
+                !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
         		projVec[i]->Logic();
                 ++i;
 			} else {

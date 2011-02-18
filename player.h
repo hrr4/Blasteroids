@@ -9,7 +9,7 @@
 
 class Player : public Collider {
 public:
-    Player();
+  Player();
 	Player(ICollide* c, int _x, int _y, int w, int h);
 	virtual ~Player();
 	virtual void Draw();
@@ -19,8 +19,9 @@ public:
 	static int numLives;
 	virtual void Update(Subject*);
 	void Shoot();
-    float GetThrust() const;
-    Vectorf GetSpeed() const;
+  float GetThrust() const;
+  Vectorf GetSpeed() const;
+
 private:
 	void Render();
 	float a, thrust, Heading, Rotation, Force; 

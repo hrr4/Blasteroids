@@ -4,6 +4,7 @@
 #include "Particle.h"
 #include "Utility.h"
 #include <math.h>
+#include <vector>
 #include <map>
 #include "vector.h"
 
@@ -33,7 +34,7 @@ public:
 
 private:
     Vectorf tempPosition;
-    static int totalID;
+    std::vector<Particle*> particleVec;
     std::multimap<int, Particle*> particleMap;
     std::multimap<int, Particle*>::iterator pIt;
 };
