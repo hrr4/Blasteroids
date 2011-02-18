@@ -5,13 +5,11 @@ IParticle::IParticle() {}
 IParticle::~IParticle() {}
 
 void IParticle::createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time) {
-    int testTimes = (rand() % 20), test= 0;
-    float tempHeading, tempSpeed;
-    Vectorf tempVelocity;
+    int totalSets = (rand() % 20), Set = 0;
     switch(_type) {
     case radialOut:
-      while (test < testTimes) {
-        for (float angle = 0.1f; angle < 2 * Utility::PI; angle+=_intensity) {
+      while (Set < totalSets) {
+        for (float angle = 0.1f; angle < 6.28318; angle+=_intensity) { // Magic Number: 2 * PI
         		tempSpeed = Utility::UGen_Random(0.5, 1.5);
     
             tempPosition.x() = ((rand() % 20) + sinf(angle)) + _x;
@@ -25,39 +23,33 @@ void IParticle::createParticleSet(formationType _type, float _x, float _y, float
             else 
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y())+Utility::PI;
 
-            particleVec.insert(new Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed));
-            /*particleMap.insert(std::make_pair(totalID, new Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed)));*/
+            particleVec.push_back(Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed));
         }
-        ++test;
+        ++Set;
       }
     }
 }
 
 void IParticle::updateParticleSet() {
-  //pIt = particleMap.begin();
-  while(pIt != particleMap.end()) {
-      float tempHeading = pIt->second->heading, tempSpeed = pIt->second->speed;
-      if (pIt->second->age >= 0) {
-            pIt->second->pos.x() += tempSpeed * sinf(tempHeading);
-            pIt->second->pos.y() += tempSpeed * cosf(tempHeading);
+  for (int i = 0; i < particleVec.size(); ++i) {
+    float tempHeading = particleVec[i].heading, tempSpeed = particleVec[i].speed;
+      if (particleVec[i].age >= 0) {
+            particleVec[i].pos.x() += tempSpeed * sinf(tempHeading);
+            particleVec[i].pos.y() += tempSpeed * cosf(tempHeading);
 
-            pIt->second->age -= 0.1;
-            ++pIt;
+            particleVec[i].age -= 0.1;
         } else {
-            pIt = particleMap.erase(pIt);
-            if (pIt != particleMap.end()) {
-                ++pIt;
-            }
+          particleVec.erase(particleVec.begin() + i);
         }
     }
 }
 
 void IParticle::drawParticleSet() {
-    for (pIt = particleMap.begin(); pIt != particleMap.end(); ++pIt) {
+    for (int i = 0; i < particleVec.size(); ++i) {
         glPushMatrix();
-        glColor4f(1, 1, 1, pIt->second->age);
+        glColor4f(1, 1, 1, particleVec[i].age);
             glBegin(GL_POINTS);
-                glVertex3f(pIt->second->pos.x(), pIt->second->pos.y(), 0);
+                glVertex3f(particleVec[i].pos.x(), particleVec[i].pos.y(), 0);
             glEnd();
         glPopMatrix();
     }

@@ -33,10 +33,9 @@ public:
     void drawParticleSet();
 
 private:
-    Vectorf tempPosition;
-    std::vector<Particle*> particleVec;
-    std::multimap<int, Particle*> particleMap;
-    std::multimap<int, Particle*>::iterator pIt;
+    Vectorf tempPosition, tempVelocity;
+    std::vector<Particle> particleVec;
+    float tempHeading, tempSpeed;
 };
 
 #endif

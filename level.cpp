@@ -50,27 +50,28 @@ void Level::Draw() {
 
 void Level::Handle_Events() {
     while(SDL_PollEvent(Event::Get_Event())) {
-		if (Event::Get_Event()->type == SDL_QUIT) {
-			Set_State(StateManager::Child_Quit);
-		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
-		    switch (Event::Get_Event()->key.keysym.sym) {
-			case SDLK_ESCAPE : 
-			    Set_State(StateManager::Child_Exit);
-			    break;
-			case SDLK_SPACE:
-				if (mainPlayer->CanShoot()) {
-					projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide, mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()), mainPlayer->GetAngle()));
-					mainPlayer->Shoot();
-				}
-				break;
-		   }
-		}
-	}
+    		if (Event::Get_Event()->type == SDL_QUIT) {
+    			Set_State(StateManager::Child_Quit);
+    		} else if (Event::Get_Event()->type == SDL_KEYDOWN) {
+    		    switch (Event::Get_Event()->key.keysym.sym) {
+        			case SDLK_ESCAPE : 
+        			    Set_State(StateManager::Child_Exit);
+        			    break;
+        			case SDLK_SPACE:
+            			if (mainPlayer->CanShoot()) {
+            					projVec.push_back(new Projectile(Projectile::PROJ_BASIC, iCollide, mainPlayer->GetSpeed(), mainPlayer->GetPosition().x()+sinf(mainPlayer->GetAngle()), mainPlayer->GetPosition().y()+cosf(mainPlayer->GetAngle()), mainPlayer->GetAngle()));
+                					mainPlayer->Shoot();
+            			}
+          				break;
+    		   }
+    		}
+    	}
 	mainPlayer->Handle_Events();
 }
 
 void Level::Logic() {
     particleEngine.updateParticleSet();
+
     if (mainPlayer->GetAlive()) {
         mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
@@ -78,7 +79,8 @@ void Level::Logic() {
         		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
-        for (int i = 0; i < cometVec.size();) {
+      int i = 0;
+      while (i < cometVec.size()) {
             delete cometVec[i];
             cometVec.erase(cometVec.begin() + i);
         }
@@ -91,15 +93,15 @@ void Level::Logic() {
             Set_State(StateManager::Child_Exit);
         }
     }
+
 	if (!cometVec.empty()) {
-        for (int i = 0; i < cometVec.size();) {
+        for (int i = 0; i < cometVec.size(); ++i) {
             if (cometVec[i]->GetAlive()) {
             		cometVec[i]->Logic();
                 // Check bounds, set to wrap
                 if ((cometVec[i]->GetPosition().x() > 0 && cometVec[i]->GetPosition().x() < Window::Get_Surf()->w) && (cometVec[i]->GetPosition().y() > 0 && cometVec[i]->GetPosition().y() < Window::Get_Surf()->h)) {
                         cometVec[i]->SetWrap(true);
                 }
-                ++i;
         		} else {                particleEngine.createParticleSet(formationType::radialOut, cometVec[i]->GetPosition().x(), 
                   cometVec[i]->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), Utility::UGen_Random(0.5, 2.0));
 
@@ -114,26 +116,17 @@ void Level::Logic() {
                 if (numPoints > 3) {
                   createCometChild(test, numPoints);
                 }
-
-                if (i != cometVec.size()) {
-                    ++i;
-                }
             }
         }
 	}
 
 	if (!projVec.empty()) {
-        for (int i = 0; i < projVec.size();) {
-            if (projVec[i]->GetAlive() && 
-                !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
-        		projVec[i]->Logic();
-                ++i;
-			} else {
+        for (int i = 0; i < projVec.size(); ++i) {
+            if (projVec[i]->GetAlive() && !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
+            		projVec[i]->Logic();
+        		} else {
                delete projVec[i];
                projVec.erase(projVec.begin() + i);
-                if (i != projVec.size()) {
-                    ++i;
-                }
             }
         }
     }
