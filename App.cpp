@@ -16,7 +16,7 @@ App::~App() {
 
 void App::Loop() {
     next_tick = SDL_GetTicks () + 10;
-	while (manager.Get_GlobalState() != StateManager::Global_Exit) {
+    while (manager.Get_GlobalState() != StateManager::Global_Exit) {
 		//delta.Start();
         if (SDL_GetTicks() > next_tick ) {
             next_tick = SDL_GetTicks() + 10;
@@ -25,7 +25,7 @@ void App::Loop() {
         }        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         activeScreen->Draw();
         updateSubSystems();
-	}
+    }
 }
 
 void App::Query_GameScreen() {

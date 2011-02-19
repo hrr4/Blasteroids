@@ -7,7 +7,6 @@
 #include "hud.h"
 #include "Utility.h"
 #include "comet.h"
-#include "ISound.h"
 
 class Title : public IGameScreen {
 public:
@@ -29,6 +28,5 @@ private:
     Comet* comets;
     Screen active;
     int selectorX, selectorY;
-    ISound soundEngine;
 };
 #endif

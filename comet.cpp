@@ -1,7 +1,7 @@
 #include "comet.h"
 
-Comet::Comet(ICollide* c, float _x, float _y, float _w, float _h, int _n, float _vel, Vectorf _vec, int _r, int _g, int _b, int _a) : inBounds(false), r(_r), g(_g), b(_b), n(_n) {
-	Position.x() = _x, Position.y() = _y, r_Rect.w = _w, r_Rect.h = _h;
+Comet::Comet(ICollide* c, Vectorf _pos, float _w, float _h, int _n, float _vel, Vectorf _vec, int _r, int _g, int _b, int _a) : inBounds(false), r(_r), g(_g), b(_b), n(_n) {
+	Position.x() = _pos.x(), Position.y() = _pos.y(), r_Rect.w = _w, r_Rect.h = _h;
 	a = _a;
 	Position.z() = angle = 0;
   speed = _vel;

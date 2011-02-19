@@ -29,6 +29,7 @@ public:
     void Amount(int& _a);
     void Announcement(const std::string _m, const std::string _f, float _x, float _y, int& _isize);
     void Status(const std::string& _m, const std::string _f, float _x, float _y, int _size, int _time);
+    void Lives(const float _x, const float _y, const int _num);
 
 private:
     void GetBBoxMiddle(const FTBBox& _x);
@@ -36,8 +37,8 @@ private:
     FontEngine* fe;
     FTBBox box;
     bool thrust, score, amount, maxHit;
-    static float thrustMeter[12];
-    float* pMeter;
+    static float thrustMeter[12], livesArray[9];
+    float* pMeter, *pLives;
     float aX, aY, j;
 };
 

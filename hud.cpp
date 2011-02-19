@@ -1,14 +1,13 @@
 #include "hud.h"
 
-float HUD::thrustMeter[12] = {
-    10, 1, 0, -10, 1, 0,
-    -10, 0, 0, 10, 0, 0
-};
+float HUD::thrustMeter[12] = { 10, 1, 0, -10, 1, 0, -10, 0, 0, 10, 0, 0 };
 
-HUD::HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount) : thrust(_thrust), score(_score), amount(_amount), fe(_fe), pMeter(thrustMeter),j(0), maxHit(false) {}
+float HUD::livesArray[9] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
+
+HUD::HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount) : thrust(_thrust), score(_score), amount(_amount), fe(_fe), pMeter(thrustMeter),j(0), maxHit(false), pLives(livesArray) {}
 
 HUD::~HUD() {
-    pMeter = 0;
+    pMeter = pLives = 0;
     delete pMeter;
 }
 
@@ -37,6 +36,25 @@ void HUD::Thrust(const float _x, const float _y, const float _t, const float sca
         glDisableClientState(GL_VERTEX_ARRAY);
     glPopMatrix();
 }
+
+void HUD::Lives(const float _x, const float _y, const int _num) {
+  glPushMatrix();
+	  glEnableClientState(GL_VERTEX_ARRAY);
+    glTranslatef(_x, _y, 0);
+    glColor4f(1, 1, 1, .4);
+    glScalef(.5, .5, 0);
+    glVertexPointer(3, GL_FLOAT, 0, &livesArray);
+
+    for (int i = 0; i < _num; ++i) {
+      glTranslatef(30, 0, 0);
+      if ((_num - i) == 1)
+        glColor4f(1, 1, 1, .8);
+      glDrawArrays(GL_LINE_LOOP, 0, 3);
+    }
+    glDisableClientState(GL_VERTEX_ARRAY);
+glPopMatrix();
+}
+
 
 void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, int& _isize) {
     /*box = fe->GetBBox(_m.c_str(), _f.c_str());

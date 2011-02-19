@@ -21,7 +21,7 @@ public:
     virtual void Handle_Events();
 private:
     void ScoreIncrease();
-    float randOutside(float _first, float _second, float _distance);
+    Vectorf randOutside(float _xMax, float _yMax, float _min, float _dist);
     void createCometChild(Vectorf _parentVec, int _n);
 
     Starfield stars;

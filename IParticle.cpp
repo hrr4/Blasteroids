@@ -20,9 +20,8 @@ void IParticle::createParticleSet(formationType _type, float _x, float _y, float
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y());
             else 
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y())+Utility::PI;
-            int test = _time*(Utility::UGen_Random(1.0, 10.0));
-            int test2 = _time*(Utility::UGen_Random(1.0, 10.0));
-            particleVec.push_back(Particle(tempPosition, tempVelocity, /*_time*(rand() % 1 + 10)*/_time*(Utility::UGen_Random(1.0, 10.0)), angle, tempHeading, tempSpeed));
+
+            particleVec.push_back(Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed));
         }
     }
 }

@@ -25,6 +25,7 @@ void Level::Draw() {
 	mainPlayer->Draw();
   particleEngine.drawParticleSet();
 	hud->Thrust(mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y()-25, mainPlayer->GetThrust(), 1);
+  hud->Lives(Window::Get_Surf()->w-50, 10, playerLives);
 	stars.Draw();
 	if (!cometVec.empty()) {
         for (int i = 0; i < cometVec.size(); ++i) {
@@ -75,18 +76,19 @@ void Level::Logic() {
     if (mainPlayer->GetAlive()) {
         mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
-            cometVec.push_back(new Comet(iCollide, randOutside(0.0f, static_cast<float>(Window::Get_Surf()->w), 20.0f), randOutside(0.0f,  static_cast<float>(Window::Get_Surf()->h), 20.0f), static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), mainPlayer->GetPosition()));
+          cometVec.push_back(new Comet(iCollide, randOutside(Window::Get_Surf()->w, Window::Get_Surf()->h, 0, 75), static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), mainPlayer->GetPosition()));
         		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
-      int i = 0;
+      // THIS IS UGLY CODE FIX THIS LATAR
+     int i = 0;
       while (i < cometVec.size()) {
             delete cometVec[i];
             cometVec.erase(cometVec.begin() + i);
         }
         if (playerLives > 0) {
         		playerLives--;
-            particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), Utility::UGen_Random(0.5, 2.0));
+            particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 0.8), Utility::UGen_Random(0.5, 2.0));
             delete mainPlayer;
             mainPlayer = new Player(iCollide, 320, 240, 25, 25);
         } else {
@@ -105,17 +107,16 @@ void Level::Logic() {
         		} else {                particleEngine.createParticleSet(formationType::radialOut, cometVec[i]->GetPosition().x(), 
                   cometVec[i]->GetPosition().y(), Utility::UGen_Random(0.1, 1.0), Utility::UGen_Random(0.5, 2.0));
 
-                Vectorf test = cometVec[i]->GetPosition();
-                numPoints = cometVec[i]->GetPoints();
+                numPoints = cometVec[i]->GetPoints()-1;
+
+                if (numPoints > 3) {
+                  createCometChild(cometVec[i]->GetPosition(), numPoints);
+                }
 
                 delete cometVec[i];
                 cometVec.erase(cometVec.begin() + i);
                 ++kills;
                 ScoreIncrease();
-                --numPoints;
-                if (numPoints > 3) {
-                  createCometChild(test, numPoints);
-                }
             }
         }
 	}
@@ -136,13 +137,29 @@ void Level::Logic() {
     }
 }
 
-float Level::randOutside(float _first, float _second, float _distance) {
-    int test = Utility::UGen_Random(_first, _second);
-    if (test <= (_second-_first)/2) {
-        return Utility::UGen_Random((_first-_distance), _first);
-    } else {
-        return Utility::UGen_Random((_second-_distance), _second);
-    }
+Vectorf Level::randOutside(float _xMax, float _yMax, float _min, float _dist) {
+  Vectorf tempPos;
+  int side = (rand() % 3);
+  switch (side) {
+  case 0: // Top
+    tempPos.x() = Utility::UGen_Random(_min, _xMax);
+    tempPos.y() = Utility::UGen_Random(_min-_dist, _min);
+    break;
+  case 1: // Right
+    tempPos.x() = Utility::UGen_Random(_xMax, _xMax+_dist);
+    tempPos.y() = Utility::UGen_Random(_min, _yMax);
+    break;
+  case 2: // Bottom
+    tempPos.x() = Utility::UGen_Random(_min, _xMax);
+    tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    break;
+  case 3: // Left
+    tempPos.x() = Utility::UGen_Random(_min-_dist, _min);
+    tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    break;
+  }
+
+  return tempPos;
 }
 
 void Level::ScoreIncrease() {
@@ -152,12 +169,9 @@ void Level::ScoreIncrease() {
 
 void Level::createCometChild(Vectorf _parentVec, int _n) {
   Vectorf randNew;
-  int bleep = (rand() % 3);
-    for (int i = 0; i < bleep; ++i) {
+  int amount = (rand() % 3);
+    for (int i = 0; i < amount; ++i) {
       randNew.set(Utility::UGen_Random(0.1, 360.0), Utility::UGen_Random(0.1, 360.0), 0);
-        cometVec.push_back(new Comet(iCollide, _parentVec.x(), _parentVec.y(), 
-            static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), numPoints,  
-            static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), 
-            randNew));
+        cometVec.push_back(new Comet(iCollide, _parentVec, static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), numPoints, static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), randNew));
     }
 }
