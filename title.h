@@ -24,7 +24,7 @@ private:
     void DrawMain();
     void DrawScores();
     void DrawOptions();
-private:
+
     Starfield stars;
     Comet* comets;
     Screen active;

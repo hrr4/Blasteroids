@@ -17,12 +17,12 @@ Player::Player(ICollide* c, int _x, int _y, int w, int h) :
 
 	centerx = r_Rect.w/2+Position.x();
 	centery = r_Rect.h/2+Position.y();
-	winwidth = Window::Get_Surf()->w/2;
-	winheight = Window::Get_Surf()->h/2;
+	winwidth = Window::Get_Surf()->w;
+	winheight = Window::Get_Surf()->h;
 
 	mass = 50;
 
-	Acceleration.x() = Acceleration.y() = thrust = Force = Position.z() = 0;
+	thrust = Force = Position.z() = 0;
 	Velocity.x() = Velocity.y() = angle = 0.1;
 	Heading = 0.5;
 	Rotation = 3;
@@ -54,59 +54,53 @@ glPopMatrix();
 }
 
 void Player::Logic() {
-
-	angle *= Utility::DEGTORAD;
-
+    angle *= Utility::DEGTORAD;
     Force = thrust/mass;
 
-	if (up_pressed && !burnout) {
-		if (thrust < 4) {
-    		/*Acceleration.x() += 0.05;
-    		Acceleration.y() += 0.05;*/
-			thrust += 0.05;
-		} else {
-			burnout = true;
-		}
+    if (up_pressed && !burnout) {
+        if (thrust < 4) {
+        		/*Acceleration.x() += 0.05;
+        		Acceleration.y() += 0.05;*/
+            thrust += 0.05;
+        } else { burnout = true; }
 
-		Velocity.x() += sinf(angle)*Force;
+        Velocity.x() += sinf(angle)*Force;
         Velocity.y() += cosf(angle)*Force;
-        
+            
         Position.x() += Velocity.x();
-		Position.y() -= Velocity.y();
-
-		angle *= Utility::RADTODEG;
+    		Position.y() -= Velocity.y();
+    
+    		angle *= Utility::RADTODEG;
 
     } else {
-		if (thrust > 0) {
-    		thrust *= .5;
-    		/*Acceleration.x() *= 0.05;
-    		Acceleration.y() *= 0.05;*/
-		}
-		if (thrust <= 0)
-			burnout = false;
-        
-		Velocity.x() -= sinf(angle)*Force;
+    		if (thrust > 0) {
+        		thrust *= .5;
+        		/*Acceleration.x() *= 0.05;
+        		Acceleration.y() *= 0.05;*/
+    		}
+    		if (thrust <= 0)
+    			burnout = false;
+            
+    		Velocity.x() -= sinf(angle)*Force;
         Velocity.y() -= cosf(angle)*Force;
-
+    
         Position.x() += Velocity.x();
-		Position.y() -= Velocity.y();
-
-		angle *= Utility::RADTODEG;
+    		Position.y() -= Velocity.y();
+    
+    		angle *= Utility::RADTODEG;
 	}
 
 	if (Position.x() < 0) {
-		Position.x() = Window::Get_Surf()->w;
+		Position.x() = winwidth;
 	} else if (Position.y() < 0) {
-		Position.y() = Window::Get_Surf()->h;
-	} else if (Position.x() > Window::Get_Surf()->w) {
+		Position.y() = winheight;
+	} else if (Position.x() > winwidth) {
 		Position.x() = 0;
-	} else if (Position.y() > Window::Get_Surf()->h) {
+	} else if (Position.y() > winheight) {
 		Position.y() = 0;
 	}
 
-	if (CheckCollision()) {
-		isAlive = false;
-	}
+	if (CheckCollision()) { isAlive = false; }
 	
 	if (shootTimeout < SDL_GetTicks()) {
 		canShoot = true;
@@ -115,21 +109,20 @@ void Player::Logic() {
 }
 
 void Player::Shoot() {
-    if(canShoot) {
-		canShoot = false;
-	}
+    if(canShoot) 
+        canShoot = false;
 }
 
 void Player::Handle_Events() {
 	if (Event::Get_Event()->type == SDL_KEYDOWN) {
-        switch (Event::Get_Event()->key.keysym.sym) {
+    switch (Event::Get_Event()->key.keysym.sym) {
         case SDLK_LEFT: angle -= Rotation; break;
-    	case SDLK_RIGHT: angle += Rotation; break;
-		case SDLK_UP: up_pressed = true; break;
+        case SDLK_RIGHT: angle += Rotation; break;
+        case SDLK_UP: up_pressed = true; break;
 		}
-    } else if (Event::Get_Event()->type == SDL_KEYUP) {
+  } else if (Event::Get_Event()->type == SDL_KEYUP) {
         switch (Event::Get_Event()->key.keysym.sym) {
-		case SDLK_UP: up_pressed = false; break;
+            case SDLK_UP: up_pressed = false; break;
         }
 	}
 }

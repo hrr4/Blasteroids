@@ -5,9 +5,7 @@ float HUD::thrustMeter[12] = {
     -10, 0, 0, 10, 0, 0
 };
 
-HUD::HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount)  :
-      thrust(_thrust), score(_score), amount(_amount), fe(_fe), pMeter(thrustMeter),
-      j(0), maxHit(false) {}
+HUD::HUD(FontEngine* _fe, bool _thrust, bool _score, bool _amount) : thrust(_thrust), score(_score), amount(_amount), fe(_fe), pMeter(thrustMeter),j(0), maxHit(false) {}
 
 HUD::~HUD() {
     pMeter = 0;
@@ -15,29 +13,29 @@ HUD::~HUD() {
 }
 
 void HUD::Simple(const int& _s, const int _size, const float _x, const float _y) {
-glPushMatrix();
-    glColor4f(1, 1, 1, .4);
-    fe->Draw(itos(_s).c_str(), _size, "04b_11", _x, _y);
-glPopMatrix();
+    glPushMatrix();
+        glColor4f(1, 1, 1, .4);
+        fe->Draw(itos(_s).c_str(), _size, "04b_11", _x, _y);
+    glPopMatrix();
 }
 
 void HUD::Thrust(const float _x, const float _y, const float _t, const float scale) {
-glPushMatrix();
-    if (_t > .1 && _t < 5) {
-        pMeter[0] = pMeter[9] -= _t*.1;
-    } else {
-        pMeter[0] = pMeter[9] = 10;
-    }
-	glEnableClientState(GL_VERTEX_ARRAY);
-    glTranslatef(_x, _y, 0);
-    for (float i = 0; i <= _t; i+=0.01) {
-        glColor4f(.2, .2, .2, i);
-    }
-    glScalef(scale, scale, 0);
-	glVertexPointer(3, GL_FLOAT, 0, &thrustMeter);
-    glDrawArrays(GL_LINE_LOOP, 0, 4);
-    glDisableClientState(GL_VERTEX_ARRAY);
-glPopMatrix();
+    glPushMatrix();
+        if (_t > .1 && _t < 5) {
+            pMeter[0] = pMeter[9] -= _t*.1;
+        } else {
+            pMeter[0] = pMeter[9] = 10;
+        }
+    	  glEnableClientState(GL_VERTEX_ARRAY);
+        glTranslatef(_x, _y, 0);
+        for (float i = 0; i <= _t; i+=0.01) {
+            glColor4f(.2, .2, .2, i);
+        }
+        glScalef(scale, scale, 0);
+    	  glVertexPointer(3, GL_FLOAT, 0, &thrustMeter);
+        glDrawArrays(GL_LINE_LOOP, 0, 4);
+        glDisableClientState(GL_VERTEX_ARRAY);
+    glPopMatrix();
 }
 
 void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, int& _isize) {

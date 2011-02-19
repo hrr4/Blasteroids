@@ -1,5 +1,6 @@
 #include "App.h"
 
+<<<<<<< HEAD
 App::App() : totalLevels(50), soundEngine(ISound::getInstance()) {
 	srand(time(0));
     winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
@@ -8,12 +9,24 @@ App::App() : totalLevels(50), soundEngine(ISound::getInstance()) {
     // Init Subsystems
 	delta.Start();
 	SDL_Init(SDL_INIT_EVERYTHING);
+=======
+App::App() : totalLevels(50) {
+    srand(time(0));
+    winmain = new Window(640, 480, 32, SDL_HWSURFACE | SDL_OPENGL);
+    activeScreen = new Title();
+    delta.Start();
+    SDL_Init(SDL_INIT_EVERYTHING);
+>>>>>>> 2286ea610b3b56b10731c5ca25f051c88078a6ec
     initGL();
 }
 
 App::~App() {
 	delete winmain;
+<<<<<<< HEAD
     delete activeScreen;
+=======
+  delete activeScreen;
+>>>>>>> 2286ea610b3b56b10731c5ca25f051c88078a6ec
 }
 
 void App::Loop() {
@@ -22,6 +35,7 @@ void App::Loop() {
 		//delta.Start();
         if (SDL_GetTicks() > next_tick ) {
             next_tick = SDL_GetTicks() + 10;
+<<<<<<< HEAD
     		activeScreen->Handle_Events();
     		activeScreen->Logic();
         }
@@ -30,6 +44,13 @@ void App::Loop() {
 		SDL_GL_SwapBuffers();
         soundEngine.frameUpdate();
 		Query_GameScreen();
+=======
+        		activeScreen->Handle_Events();
+        		activeScreen->Logic();
+        }        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        activeScreen->Draw();
+        updateSubSystems();
+>>>>>>> 2286ea610b3b56b10731c5ca25f051c88078a6ec
 	}
 }
 
@@ -42,32 +63,32 @@ void App::Query_GameScreen() {
 void App::Set_GameScreen(StateManager::Global nextGlobal) {
 	switch(nextGlobal) {
 	case StateManager::Global_Intro :
-    	delete activeScreen;
-		activeScreen = new Intro();
-		manager.Set_GlobalState(nextGlobal);
-		break;
+    delete activeScreen;
+    activeScreen = new Intro();
+    manager.Set_GlobalState(nextGlobal);
+    break;
 	case StateManager::Global_Title :
-    	delete activeScreen;
+    delete activeScreen;
 		activeScreen = new Title();
 		manager.Set_GlobalState(nextGlobal);
-		levelNum = 0;
+		levelNum = 1;
 		break;
 	case StateManager::Global_Level :
         switch(manager.Get_GlobalState()) {
-		case StateManager::Global_Title :
-        	delete activeScreen;
-    		activeScreen = new Level(levelNum);
-            break;
-		case StateManager::Global_Level :
-        	delete activeScreen;
-            activeScreen = new Level(++levelNum);
-            break;
-		} 
+        		case StateManager::Global_Title :
+            	delete activeScreen;
+            	activeScreen = new Level(levelNum);
+              break;
+            case StateManager::Global_Level :
+              delete activeScreen;
+              activeScreen = new Level(++levelNum);
+              break;
+    		} 
         // Beat the game?! no wai
 		if (levelNum == totalLevels) {
-            delete activeScreen;
-            activeScreen = new Title();
-        }
+        delete activeScreen;
+        activeScreen = new Title();
+    }
 		manager.Set_GlobalState(nextGlobal);
 		break;
 	case StateManager::Global_Exit :
@@ -95,3 +116,8 @@ bool App::initGL() {
 		return false;
 	return true;
 }
+
+void App::updateSubSystems() {
+    SDL_GL_SwapBuffers();
+    Query_GameScreen();
+} 
