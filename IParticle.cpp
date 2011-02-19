@@ -5,11 +5,9 @@ IParticle::IParticle() {}
 IParticle::~IParticle() {}
 
 void IParticle::createParticleSet(formationType _type, float _x, float _y, float _intensity, float _time) {
-    int totalSets = (rand() % 20), Set = 0;
     switch(_type) {
     case radialOut:
-      while (Set < totalSets) {
-        for (float angle = 0.1f; angle < 6.28318; angle+=_intensity) { // Magic Number: 2 * PI
+        for (float angle = 0.1f; angle < _intensity*10+(rand() % 1 + 50); angle+=_intensity) {
         		tempSpeed = Utility::UGen_Random(0.5, 1.5);
     
             tempPosition.x() = ((rand() % 20) + sinf(angle)) + _x;
@@ -22,11 +20,10 @@ void IParticle::createParticleSet(formationType _type, float _x, float _y, float
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y());
             else 
             		tempHeading = atanf(tempVelocity.x()/tempVelocity.y())+Utility::PI;
-
-            particleVec.push_back(Particle(tempPosition, tempVelocity, _time*(rand() % 1 + 10), angle, tempHeading, tempSpeed));
+            int test = _time*(Utility::UGen_Random(1.0, 10.0));
+            int test2 = _time*(Utility::UGen_Random(1.0, 10.0));
+            particleVec.push_back(Particle(tempPosition, tempVelocity, /*_time*(rand() % 1 + 10)*/_time*(Utility::UGen_Random(1.0, 10.0)), angle, tempHeading, tempSpeed));
         }
-        ++Set;
-      }
     }
 }
 
