@@ -1,0 +1,4 @@
+#include "Particle.h"
+
+Particle::Particle(Vectorf _pos, float _lifeSpan, float _angle, int _size = 1) :
+  pos(_pos), age(_lifeSpan), lifeSpan(_lifeSpan), angle(_angle) {}

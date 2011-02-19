@@ -1,10 +1,13 @@
 #include "starfield.h"
 
-Starfield::Starfield() : starVec((rand() % 200) + 20) {}
-
-Starfield::~Starfield() {
-    starVec.clear();
+Starfield::Starfield() {
+	int max = ((rand() % 200) + 20);
+	for (int i = 0; i < max; ++i) {
+		starVec.push_back(Star());
+	}
 }
+
+Starfield::~Starfield() {starVec.clear();}
 
 void Starfield::Draw() {
     for (int i = 0; i < starVec.size(); ++i) {

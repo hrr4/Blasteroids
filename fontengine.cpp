@@ -25,16 +25,15 @@ glPushMatrix();    glScalef(1, -1, 1);
     point.Y(-Y);
     if (Z != 0) 
         point.Z(Z);
-    for (fIt = fontMap.begin(); fIt != fontMap.end(); ++fIt) {
-        if (fIt->first == ident) {
-            (*fIt).second->FaceSize(size);
-            (*fIt).second->Render(text.c_str(),text.size(), point);
-        }
+    if (fontMap.find(ident) != fontMap.end()) {
+      fontMap[ident]->FaceSize(size);
+      fontMap[ident]->Render(text.c_str(),text.size(), point);
     }
 glPopMatrix();
 }
 
 FTBBox FontEngine::GetBBox(const std::string& _text, const std::string& _filename) {
+  FTBBox tempBox;
     std::string filename;
     /*if (_filename.find_first_of(".")) {
         filename = filename.substr(0, _filename.find_last_of("."));
@@ -48,5 +47,5 @@ FTBBox FontEngine::GetBBox(const std::string& _text, const std::string& _filenam
             return (*fIt).second->BBox(_text.c_str());
         }
     }
-    return false;
+    return tempBox;
 }

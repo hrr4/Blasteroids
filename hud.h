@@ -32,7 +32,7 @@ public:
 
 private:
     void GetBBoxMiddle(const FTBBox& _x);
-private:
+
     FontEngine* fe;
     FTBBox box;
     bool thrust, score, amount, maxHit;

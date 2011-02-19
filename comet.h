@@ -17,8 +17,9 @@ public:
 	virtual void Draw();
 	virtual void Logic();
 	virtual void Handle_Events();
-    virtual void Update(Subject*);
-    void SetWrap(const bool isWrap);
+  virtual void Update(Subject*);
+  void SetWrap(const bool isWrap);
+  int GetPoints();
 
 private:
 	void Randomize_Points(int w, int h, int n);
