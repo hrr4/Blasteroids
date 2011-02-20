@@ -22,7 +22,7 @@ public:
 private:
     void ScoreIncrease();
     Vectorf randOutside(float _xMax, float _yMax, float _min, float _dist);
-    void createCometChild(Vectorf _parentVec, int _n);
+    void createCometChild(Vectorf& _parentVec, int _n);
 
     Starfield stars;
     ICollide* iCollide;

@@ -1,6 +1,8 @@
 #include "IParticle.h"
 
-IParticle::IParticle() {}
+IParticle::IParticle() {
+  particleVec.reserve(200);
+}
 
 IParticle::~IParticle() {}
 

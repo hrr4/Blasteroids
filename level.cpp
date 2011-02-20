@@ -76,7 +76,7 @@ void Level::Logic() {
     if (mainPlayer->GetAlive()) {
         mainPlayer->Logic();
         if (SDL_GetTicks() > cometSpawn) {
-          cometVec.push_back(new Comet(iCollide, randOutside(Window::Get_Surf()->w, Window::Get_Surf()->h, 0, 75), static_cast<float>(rand() % 50+60), static_cast<float>(rand() % 50+60), (rand() % 3 + 5), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), mainPlayer->GetPosition()));
+          cometVec.push_back(new Comet(iCollide, randOutside(Window::Get_Surf()->w, Window::Get_Surf()->h, 0, 75), static_cast<float>(rand() % 40+50), static_cast<float>(rand() % 40+50), (rand() % 3 + 6), static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), mainPlayer->GetPosition()));
         		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
@@ -122,10 +122,10 @@ void Level::Logic() {
 	if (!projVec.empty()) {
         for (int i = 0; i < projVec.size(); ++i) {
             if (projVec[i]->GetAlive() && !(projVec[i]->GetPosition().x() < -10 || projVec[i]->GetPosition().x() > Window::Get_Surf()->w+10 || projVec[i]->GetPosition().y() < -10 || projVec[i]->GetPosition().y() > Window::Get_Surf()->h+10)) {
-            		projVec[i]->Logic();
+              projVec[i]->Logic();
         		} else {
-               delete projVec[i];
-               projVec.erase(projVec.begin() + i);
+              delete projVec[i];
+              projVec.erase(projVec.begin() + i);
             }
         }
     }
@@ -165,13 +165,13 @@ void Level::ScoreIncrease() {
     Level::score += cometScore;
 }
 
-void Level::createCometChild(Vectorf _parentVec, int _n) {
+void Level::createCometChild(Vectorf& _parentVec, int _n) {
   int amount = (rand() % 3);
   if (amount > 0) {
     Vectorf randNew;
     for (int i = 0; i < amount; ++i) {
       randNew.set(rand() % 359, rand() % 359, 0);
-      cometVec.push_back(new Comet(iCollide, _parentVec, static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), numPoints, static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), randNew));
+      cometVec.push_back(new Comet(iCollide, _parentVec, static_cast<float>(rand() % 20+30), static_cast<float>(rand() % 20+30), _n, static_cast<float>((levelNum/10) + (Utility::UGen_Random(0.1, 1.0))), randNew));
     }
   }
 }
