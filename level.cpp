@@ -80,12 +80,11 @@ void Level::Logic() {
         		cometSpawn = SDL_GetTicks() + 2000;
         }
     } else {
-      // THIS IS UGLY CODE FIX THIS LATAR
-     int i = 0;
-      while (i < cometVec.size()) {
-            delete cometVec[i];
-            cometVec.erase(cometVec.begin() + i);
-        }
+      // Still ugly code...... meh
+     for (int i = (cometVec.size()-1); i >= 0; --i) {
+       delete cometVec[i];
+       cometVec.erase(cometVec.begin() + i);
+     }
         if (playerLives > 0) {
         		playerLives--;
             particleEngine.createParticleSet(formationType::radialOut, mainPlayer->GetPosition().x(), mainPlayer->GetPosition().y(), Utility::UGen_Random(0.1, 0.8), Utility::UGen_Random(0.5, 2.0));
@@ -143,19 +142,23 @@ Vectorf Level::randOutside(float _xMax, float _yMax, float _min, float _dist) {
   switch (side) {
   case 0: // Top
     tempPos.x() = Utility::UGen_Random(_min, _xMax);
-    tempPos.y() = Utility::UGen_Random(_min-_dist, _min);
+    //tempPos.y() = Utility::UGen_Random(_min-_dist, _min);
+    tempPos.y() = _min-_dist;
     break;
   case 1: // Right
-    tempPos.x() = Utility::UGen_Random(_xMax, _xMax+_dist);
+    //tempPos.x() = Utility::UGen_Random(_xMax, _xMax+_dist);
+    tempPos.x() = _xMax+_dist;
     tempPos.y() = Utility::UGen_Random(_min, _yMax);
     break;
   case 2: // Bottom
     tempPos.x() = Utility::UGen_Random(_min, _xMax);
-    tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    //tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    tempPos.y() = _yMax+_dist;
     break;
   case 3: // Left
     tempPos.x() = Utility::UGen_Random(_min-_dist, _min);
-    tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    //tempPos.y() = Utility::UGen_Random(_yMax, _yMax+_dist);
+    tempPos.y() = _yMax+_dist;
     break;
   }
 
