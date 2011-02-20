@@ -9,7 +9,6 @@
 
 class Player : public Collider {
 public:
-  Player();
 	Player(ICollide* c, int _x, int _y, int w, int h);
 	virtual ~Player();
 	virtual void Draw();

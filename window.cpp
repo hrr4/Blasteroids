@@ -4,7 +4,7 @@ SDL_Surface* Window::s_Screen = NULL;
 
 Window::Window(const int w, const int h, const int bpp, const int flags) {
 	s_Screen = SDL_SetVideoMode(w, h, bpp, flags);
-	SDL_WM_SetCaption("Comets!",NULL);
+	SDL_WM_SetCaption("Blasteroids!",NULL);
 	Grab = SDL_WM_GrabInput(SDL_GRAB_OFF);
 	cursorVis = SDL_ShowCursor(SDL_ENABLE);
 }	

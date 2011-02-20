@@ -4,8 +4,6 @@ int Player::numLives = 3;
 
 float Player::vertArray[9] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
 
-Player::Player() {}
-
 Player::Player(ICollide* c, int _x, int _y, int w, int h) :
     up_pressed(false), burnout(false), canShoot(true), a(1), ticksOffset(400), mass(50) {
 	isPassable = false, isAlive = true;
@@ -19,8 +17,6 @@ Player::Player(ICollide* c, int _x, int _y, int w, int h) :
 	centery = r_Rect.h/2+Position.y();
 	winwidth = Window::Get_Surf()->w;
 	winheight = Window::Get_Surf()->h;
-
-	mass = 50;
 
 	thrust = Force = Position.z() = 0;
 	Velocity.x() = Velocity.y() = angle = 0.1;
@@ -59,8 +55,6 @@ void Player::Logic() {
 
     if (up_pressed && !burnout) {
         if (thrust < 4) {
-        		/*Acceleration.x() += 0.05;
-        		Acceleration.y() += 0.05;*/
             thrust += 0.05;
         } else { burnout = true; }
 
@@ -73,14 +67,12 @@ void Player::Logic() {
     		angle *= Utility::RADTODEG;
 
     } else {
-    		if (thrust > 0) {
+    		if (thrust <= 0) {
+    			burnout = false;   
+        } else {
         		thrust *= .5;
-        		/*Acceleration.x() *= 0.05;
-        		Acceleration.y() *= 0.05;*/
-    		}
-    		if (thrust <= 0)
-    			burnout = false;
-            
+        }
+
     		Velocity.x() -= sinf(angle)*Force;
         Velocity.y() -= cosf(angle)*Force;
     
@@ -121,9 +113,9 @@ void Player::Handle_Events() {
         case SDLK_UP: up_pressed = true; break;
 		}
   } else if (Event::Get_Event()->type == SDL_KEYUP) {
-        switch (Event::Get_Event()->key.keysym.sym) {
-            case SDLK_UP: up_pressed = false; break;
-        }
+    switch (Event::Get_Event()->key.keysym.sym) {
+        case SDLK_UP: up_pressed = false; break;
+    }
 	}
 }
 

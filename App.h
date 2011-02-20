@@ -9,7 +9,6 @@
 #include "level.h"
 #include <SDL.h>
 #include <SDL_image.h>
-#include <sstream>
 #include <SDL_opengl.h>
 #include <random>
 #include <time.h>
