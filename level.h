@@ -31,7 +31,7 @@ private:
     IParticle particleEngine;
     std::vector<Collider*> projVec; 
     std::vector<Comet*> cometVec; 
-    int numPoints, untilNext, kills, announceSize, levelNum, cometScore, cometSpawn;
+    unsigned int numPoints, untilNext, kills, announceSize, levelNum, cometScore, cometSpawn;
     bool callAnnouncement; 
     static int playerLives, score;
 };

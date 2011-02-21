@@ -56,7 +56,7 @@ glPopMatrix();
 }
 
 
-void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, int& _isize) {
+void HUD::Announcement(std::string _m, const std::string _f, float _x, float _y, unsigned int& _isize) {
     /*box = fe->GetBBox(_m.c_str(), _f.c_str());
     GetBBoxMiddle(box);*/
 

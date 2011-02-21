@@ -37,16 +37,15 @@ void Level::Draw() {
         		projVec[i]->Draw();
         }
 	}
-    if (playerLives >= 0) {
-        hud->Simple(Level::score, 12, 0, 10);
-    } else {
-        hud->Simple(Level::score, 72, (Window::Get_Surf()->w/2), (Window::Get_Surf()->h/2));
-    }
-    hud->Simple(untilNext-kills, 12, (Window::Get_Surf()->w/2), 10);
-    if (callAnnouncement) {
-        hud->Announcement(itos(levelNum).c_str(), "04b_11", 
-            Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
-    }
+  if (playerLives >= 0) {
+      hud->Simple(Level::score, 12, 0, 10);
+  } else {
+      hud->Simple(Level::score, 72, (Window::Get_Surf()->w/2), (Window::Get_Surf()->h/2));
+  }
+  hud->Simple(untilNext-kills, 12, (Window::Get_Surf()->w/2), 10);
+  if (callAnnouncement) {
+      hud->Announcement(itos(levelNum).c_str(), "04b_11", Window::Get_Surf()->w/2, Window::Get_Surf()->h/2, announceSize);
+  } 
 }
 
 void Level::Handle_Events() {
