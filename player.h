@@ -24,8 +24,8 @@ public:
 private:
 	void Render();
 	float a, thrust, Heading, Rotation, Force; 
-	bool up_pressed, canShoot, burnout;
-	static float vertArray[9]; 
+	bool up_pressed, canShoot, burnout, drawThrust;
+	static float vertArray[];
 	int centerx, centery, length, winheight, winwidth, mass, shootTimeout, ticksOffset; 
 };
 #endif

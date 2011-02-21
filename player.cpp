@@ -2,10 +2,10 @@
 
 int Player::numLives = 3;
 
-float Player::vertArray[9] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
+float Player::vertArray[] = {-10, 10, 0, 10, 10, 0, 0, -20, 0};
 
 Player::Player(ICollide* c, int _x, int _y, int w, int h) :
-    up_pressed(false), burnout(false), canShoot(true), a(1), ticksOffset(400), mass(50) {
+    up_pressed(false), burnout(false), canShoot(true), a(1), ticksOffset(400), mass(50), drawThrust(false) {
 	isPassable = false, isAlive = true;
 	Position.x() = _x, Position.y() = _y, r_Rect.w = w, r_Rect.h = h;
 	radius = 10;
@@ -43,8 +43,14 @@ glPushMatrix();
 	glRotatef(angle, 0, 0, 1);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, &vertArray);
-    glColor4f(1, 1, 1, 1);
+  glColor4f(1, 1, 1, 1);
+    if (drawThrust) {
+      glBegin(GL_LINE_LOOP);
+        glVertex3f(7, 10, 0); glVertex3f(7, 18, 0); glVertex3f(5, 17, 0); glVertex3f(0, 14, 0); glVertex3f(-5, 17, 0); glVertex3f(-7, 18, 0); glVertex3f(-7, 10, 0);
+      glEnd();
+    }
 	glDrawArrays(GL_LINE_LOOP, 0, 3);
+  glDisableClientState(GL_VERTEX_ARRAY);
 	glFlush();
 glPopMatrix();
 }
@@ -66,12 +72,16 @@ void Player::Logic() {
     
     		angle *= Utility::RADTODEG;
 
+        drawThrust = true;
+
     } else {
     		if (thrust <= 0) {
     			burnout = false;   
         } else {
         		thrust *= .5;
         }
+
+        drawThrust = false;
 
     		Velocity.x() -= sinf(angle)*Force;
         Velocity.y() -= cosf(angle)*Force;
