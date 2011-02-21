@@ -28,7 +28,7 @@ void HUD::Thrust(const float _x, const float _y, const float _t, const float sca
     	  glEnableClientState(GL_VERTEX_ARRAY);
         glTranslatef(_x, _y, 0);
         for (float i = 0; i <= _t; i+=0.01) {
-            glColor4f(.2, .2, .2, i);
+            glColor4f(.3, .2, .2, i);
         }
         glScalef(scale, scale, 0);
     	  glVertexPointer(3, GL_FLOAT, 0, &thrustMeter);
